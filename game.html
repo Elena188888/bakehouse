@@ -130,6 +130,12 @@ html.embed-mode,body.embed-mode{background:transparent;overflow-x:hidden}
 .game-stage .coupon-ok-btn{padding:11px;font-size:13px;margin-top:8px}
 .game-stage .coupon-close{top:7px;right:10px}
 @media(max-width:600px){.embed-mode .my-coupons{margin-top:14px;padding:18px 14px}.game-stage .coupon-card{padding:18px 12px 12px}.game-stage .coupon-title{font-size:20px}.game-stage .coupon-sub{font-size:12px}}
+
+/* Compact iframe: remove extra whitespace below My Coupons. */
+html.embed-mode,body.embed-mode{min-height:0!important;height:auto!important;overflow-x:hidden}
+.embed-mode .my-coupons{margin-bottom:0!important}
+.embed-mode .site-footer{display:none!important}
+.embed-mode main{margin:0!important;padding-bottom:0!important}
 </style>
 </head>
 <body>
@@ -140,7 +146,7 @@ html.embed-mode,body.embed-mode{background:transparent;overflow-x:hidden}
   document.body.classList.add('embed-mode');
   function syncHeight(){
     if(window.parent===window)return;
-    var h=Math.ceil(document.documentElement.scrollHeight);
+    var h=Math.ceil(document.body.getBoundingClientRect().height);
     window.parent.postMessage({type:'bakehouse:game-height',height:h},window.location.origin);
   }
   window.addEventListener('load',syncHeight);

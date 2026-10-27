@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>Bakehouse — A Modern Bakery Experience</title>
-    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027d"></script>
+    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027e"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Gh48ig3V.css">
-    <link rel="stylesheet" href="./assets/halloween.css?v=20261027">
+    <link rel="stylesheet" href="./assets/halloween.css?v=20261027e">
     <link rel="stylesheet" href="./assets/typography.css">
     <script>
       // Keep the embedded merge game at its natural height on mobile/desktop.
@@ -20,9 +20,9 @@
         if (event.origin !== window.location.origin) return;
         if (!event.data || event.data.type !== 'bakehouse:game-height') return;
         var h = Number(event.data.height);
-        if (!Number.isFinite(h) || h < 300 || h > 5000) return;
+        if (!Number.isFinite(h) || h < 250 || h > 5000) return;
         document.querySelectorAll('iframe[src*="game.html?embedded=1"]').forEach(function(frame) {
-          if (event.source === frame.contentWindow) frame.style.height = (h + 8) + 'px';
+          if (event.source === frame.contentWindow) frame.style.height = (h + 2) + 'px';
         });
       });
     </script>

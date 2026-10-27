@@ -1,0 +1,7 @@
+Bakehouse updated site — 27 Oct 2026
+Upload CONTENTS of this folder to GitHub repo root (not this folder itself).
+Updates: responsive game iframe + removed blank space; page heading Bakehouse Merge; Halloween design transition; matching menu prices from official Bakehouse menu and Bakehouse Occasions listings.
+Important: Halloween tart HK$43 remains project-defined seasonal price (not verified from official listing). Some drinks, packaging items remain project prices where product units differ from official listings.
+Mini pastries listed as box prices (not per piece).
+Sources: https://www.bakehouse.hk/menu and https://occasions.bakehouse.hk/collections/all-collections-products
+The previously missing assets/halloween.js is included.

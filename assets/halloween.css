@@ -23,3 +23,13 @@
 .hw-photo-stamp{font-family:'DM Sans',sans-serif;letter-spacing:.1em}
 .hw-actions{margin-top:23px;gap:20px}.hw-primary{border-radius:9px!important;padding:14px 21px}.hw-link{font-family:'DM Sans',sans-serif}
 @media(max-width:700px){.hw-feature{padding:48px 20px}.hw-copy h2{font-size:clamp(32px,8vw,41px)!important}}
+
+/* Editorial transition into the next home section */
+.hw-feature{background:linear-gradient(180deg,#fbf2e5 0%,#fffaf3 78%,#ffffff 100%)!important;padding-bottom:clamp(50px,6vw,80px)!important}
+.hw-feature::after{content:"";display:block;position:absolute;bottom:0;left:7%;right:7%;height:1px;background:linear-gradient(90deg,transparent,#e4d6c5,transparent)}
+.hw-feature + section{padding-top:clamp(36px,4.5vw,64px)!important}
+.hw-copy h2{font-family:'Barlow Condensed', 'DM Sans', sans-serif!important;font-weight:800!important;letter-spacing:-.025em!important;font-size:clamp(40px,4.5vw,62px)!important;line-height:1.02!important}
+.hw-copy h2 em{font-family:Georgia,serif!important;font-weight:400!important;font-size:.82em;letter-spacing:-.025em}
+.hw-eyebrow{color:#aa562f!important}
+.hw-photo img{border-radius:100px 100px 20px 20px!important}
+@media(max-width:700px){.hw-feature{padding-bottom:42px!important}.hw-copy h2{font-size:clamp(38px,10vw,51px)!important}}
