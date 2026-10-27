@@ -1,0 +1,1 @@
+Version 3: draggable ghost. Tap ghost to navigate to #/game, drag with pointer anywhere within viewport, English tooltip advertises coupons. Route scroll resets on same-page hash links before React navigation and repeatedly after render. Existing game and menu retained. Browser interaction not fully verified.
