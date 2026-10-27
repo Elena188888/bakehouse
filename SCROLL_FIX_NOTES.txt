@@ -1,1 +1,1 @@
-Navigation scrolling fix: on changing #/ routes (e.g. menu, product detail, baking journal, mini game), reset page scroll to top. Added only to index.html. Other files retained from Bakehouse_Blue_Sourdough_TeaReward.
+V5: Changed scroll fix so it runs ONCE when the hash route changes, after two animation frames. Removed repeated scrollTo timers and click-triggered extra resets. Scrolling normally on any page does not trigger a reset. Pet greetings and all other site files unchanged.
