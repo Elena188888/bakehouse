@@ -92,6 +92,44 @@ html.embed-mode,body.embed-mode{background:transparent;overflow-x:hidden}
 .embed-mode .game-restart-btn{border-radius:11px}
 @media(max-width:900px){.embed-mode .game-wrap{max-width:650px}.embed-mode .game-side-l{order:0}.embed-mode .game-stage{order:1}.embed-mode .game-side-r{order:2}.embed-mode .game-side{justify-content:center}}
 @media(max-width:580px){.embed-mode .container{padding:0 4px}.embed-mode .game-wrap{gap:12px}.embed-mode .game-side{gap:8px}.embed-mode .game-info-box{padding:12px}.embed-mode .game-stage{width:100%}.embed-mode .game-hint{font-size:12px}.embed-mode #game{padding-top:2px}}
+
+/* My Coupons / rules — match Bakehouse's warm cream & plum design */
+.game-rules{font:500 12px/1.6 'DM Sans',sans-serif;background:#fff8e9;border:1px solid #e5d4bc;border-left:4px solid #bd642f;border-radius:9px;padding:13px 14px;color:#67566b}
+.game-rules strong{display:block;color:#432c57;font-size:13px;margin-bottom:3px}
+.my-coupons{margin:35px auto 12px;padding:30px 27px;border:1px solid #e5d4bc;background:#fffaf1;border-radius:18px;box-shadow:0 4px 24px rgba(54,38,63,.06)}
+.coupon-heading{font:700 clamp(23px,3vw,32px) Georgia,serif;color:#36263f;margin-bottom:7px}
+.coupon-explainer{font:14px/1.6 'DM Sans',sans-serif;color:#67566b;margin-bottom:18px}
+.saved-coupons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.saved-coupon{min-width:0;border-radius:14px;padding:20px;background:#fcf3e5;border:1px dashed #cba984;display:flex;flex-direction:column;gap:9px}
+.saved-coupon.is-locked{opacity:.62;filter:grayscale(.35)}
+.saved-coupon .small-label{font:700 10px 'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.15em;color:#9b4e25}
+.saved-coupon h3{font:700 21px Georgia,serif;color:#36263f}
+.saved-coupon p{font:12px/1.6 'DM Sans',sans-serif;color:#67566b;flex:1}
+.saved-coupon button{border:0;background:#432c57;color:#fff8e9;border-radius:7px;padding:12px 10px;font:600 13px 'DM Sans',sans-serif}
+.saved-coupon button:disabled{cursor:not-allowed;background:#a99da9}
+.qr-overlay{position:fixed;inset:0;background:rgba(54,38,63,.72);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}
+.qr-panel{position:relative;background:#fff8e9;color:#36263f;border-radius:20px;padding:28px;text-align:center;width:100%;max-width:380px;box-shadow:0 12px 40px #36263f40}
+.qr-panel h2{font:700 27px Georgia,serif;margin:7px 0 9px}.qr-panel p{font:13px/1.55 'DM Sans',sans-serif;color:#67566b;margin-bottom:12px}
+.qr-panel img{display:block;width:200px;height:200px;margin:15px auto;background:white;padding:9px;border-radius:10px;max-width:100%}
+.qr-panel .demo-mark{color:#9b4e25;font-size:12px;font-weight:700}
+.qr-close{position:absolute;right:13px;top:10px;border:0;background:transparent;font-size:26px;color:#432c57}
+@media(max-width:600px){.saved-coupons{grid-template-columns:1fr}.my-coupons{padding:20px 15px;margin-top:20px}}
+
+/* Refined, compact integrated game */
+.embed-mode #game{padding:0 0 8px}.embed-mode .game-wrap{gap:14px;max-width:1080px;margin:auto}
+.embed-mode .game-side{gap:12px}.embed-mode .game-info-box{padding:15px}
+.embed-mode .my-coupons{max-width:1050px;margin:18px auto 6px;padding:22px 24px}
+.embed-mode .coupon-explainer{margin-bottom:12px}.embed-mode .saved-coupon{padding:15px 18px;gap:5px}
+.embed-mode .saved-coupon h3{font-size:19px}.embed-mode .saved-coupon button{padding:9px}
+.game-stage .coupon-overlay{position:absolute;inset:0;z-index:30;background:rgba(54,38,63,.62);display:flex;align-items:center;justify-content:center;padding:14px}
+.game-stage .coupon-card{width:min(94%,390px);padding:24px 22px 18px;max-height:calc(100% - 24px);overflow:auto;border-radius:16px;box-shadow:0 15px 38px rgba(31,16,34,.26)}
+.game-stage .coupon-title{font-size:clamp(21px,3vw,29px);line-height:1.18;margin:8px 0 10px}
+.game-stage .coupon-sub{font-size:13px;line-height:1.5;margin-bottom:10px}
+.game-stage .coupon-amount{font-size:clamp(24px,3vw,32px);margin:8px 0}
+.game-stage .coupon-code-box{margin:10px 0;padding:8px;gap:6px}.game-stage .coupon-code{font-size:11px}
+.game-stage .coupon-ok-btn{padding:11px;font-size:13px;margin-top:8px}
+.game-stage .coupon-close{top:7px;right:10px}
+@media(max-width:600px){.embed-mode .my-coupons{margin-top:14px;padding:18px 14px}.game-stage .coupon-card{padding:18px 12px 12px}.game-stage .coupon-title{font-size:20px}.game-stage .coupon-sub{font-size:12px}}
 </style>
 </head>
 <body>
@@ -117,9 +155,20 @@ html.embed-mode,body.embed-mode{background:transparent;overflow-x:hidden}
 <div class="game-wrap">
 <div class="game-side game-side-l"><div class="game-info-box"><div class="gi-label">Score</div><div class="gi-value" id="gameScore">0</div></div><div class="game-info-box"><div class="gi-label">Best Merge</div><div class="gi-value" id="gameBest" style="font-size:1rem">&mdash;</div></div><div class="game-legend" id="gameLegend"></div></div>
 <div class="game-stage" id="gameStage"><div class="game-overline" id="gameOverline"></div><canvas id="gameCanvas" tabindex="0" aria-label="Bakery merge game. Move pointer and tap to drop. Keyboard: arrow keys to aim, Space to drop.">Your browser needs Canvas support to play.</canvas></div>
-<div class="game-side game-side-r"><div class="game-info-box game-preview-box"><div class="gi-label">Next Item</div><div class="game-preview-icon"><canvas id="nextCanvas" width="56" height="56" aria-label="Next bakery item"></canvas></div></div><button class="game-restart-btn" id="restartBtn">Restart</button><button class="game-restart-btn reward-btn-inline" id="rewardBtn" hidden>View HK$5 Demo Reward</button><button class="game-restart-btn reward-btn-inline" id="reward2Btn" hidden>View Free Tart Demo Reward</button><p class="game-hint">Move pointer to aim. Click or tap to drop.<br>Merge matching treats. Don&rsquo;t cross the red line!</p></div>
-</div></div></main>
-<div class="coupon-overlay" id="couponOverlay" hidden><section class="coupon-card" role="dialog" aria-modal="true" aria-labelledby="couponTitle"><button class="coupon-close" id="closeBtn" aria-label="Close and continue playing">&times;</button><div class="eyebrow" id="couponEyebrow">Reward unlocked</div><h2 class="coupon-title" id="couponTitle">Egg Tart!</h2><p class="coupon-sub" id="couponSub">You baked a fresh egg tart.</p><div class="coupon-amount" id="couponAmount">HK$5 Reward</div><div class="coupon-code-box" id="couponDetails" hidden><span class="coupon-code" id="couponCode"></span><button class="copy-btn" id="copyBtn">Copy</button></div><button class="coupon-ok-btn" id="claimBtn">Reveal Demo Code</button><button class="coupon-ok-btn" id="continueBtn">Keep Playing</button></section></div>
+<div class="game-side game-side-r"><div class="game-info-box game-preview-box"><div class="gi-label">Next Item</div><div class="game-preview-icon"><canvas id="nextCanvas" width="56" height="56" aria-label="Next bakery item"></canvas></div></div><button class="game-restart-btn" id="restartBtn">Restart</button><button class="game-restart-btn reward-btn-inline" id="rewardBtn" hidden>View HK$5 Reward</button><button class="game-restart-btn reward-btn-inline" id="reward2Btn" hidden>View Free Tart Reward</button><div class="game-rules"><strong>Play as often as you like!</strong>Each coupon can only be earned once per browser. Restart and replay anytime; previously unlocked rewards remain in My Coupons.</div><p class="game-hint">Move pointer to aim. Click or tap to drop.<br>Merge matching treats. Don&rsquo;t cross the red line!</p></div>
+</div>
+<section class="my-coupons" id="myCoupons" aria-labelledby="myCouponsTitle">
+<h2 class="coupon-heading" id="myCouponsTitle">My Coupons</h2>
+<p class="coupon-explainer">Your bakery rewards appear here when you unlock them. Each coupon is available once, but you can play the game as many times as you like. Rewards are saved in this browser only.</p>
+<div class="saved-coupons" id="savedCoupons" aria-live="polite">
+<article class="saved-coupon is-locked" id="savedTart"><span class="small-label">Reward 01</span><h3>HK$5 Voucher</h3><p id="savedTartStatus">Locked · Merge an Egg Tart to unlock.</p><button type="button" id="viewTart" disabled>Locked</button></article>
+<article class="saved-coupon is-locked" id="savedGiant"><span class="small-label">Reward 02</span><h3>Free Sourdough Egg Tart</h3><p id="savedGiantStatus">Locked · Merge a Giant Tart to unlock.</p><button type="button" id="viewGiant" disabled>Locked</button></article>
+</div>
+<p class="game-hint" style="margin-top:16px">Coupons are saved in this browser. Each reward can be earned once.</p>
+</section></div></main>
+<div class="coupon-overlay" id="couponOverlay" hidden><section class="coupon-card" role="dialog" aria-modal="true" aria-labelledby="couponTitle"><button class="coupon-close" id="closeBtn" aria-label="Close and continue playing">&times;</button><div class="eyebrow" id="couponEyebrow">Reward unlocked</div><h2 class="coupon-title" id="couponTitle">Egg Tart!</h2><p class="coupon-sub" id="couponSub">You baked a fresh egg tart.</p><div class="coupon-amount" id="couponAmount">HK$5 Reward</div><div class="coupon-code-box" id="couponDetails" hidden><span class="coupon-code" id="couponCode"></span><button class="copy-btn" id="copyBtn">Copy</button></div><button class="coupon-ok-btn" id="claimBtn">View Coupon Code</button><button class="coupon-ok-btn" id="continueBtn">Keep Playing</button></section></div>
+
+<div class="qr-overlay" id="qrOverlay" hidden><section class="qr-panel" role="dialog" aria-modal="true" aria-labelledby="qrTitle"><button type="button" class="qr-close" id="qrClose" aria-label="Close QR code">&times;</button><div class="eyebrow">My Coupons</div><h2 id="qrTitle">Your Reward</h2><p>Present your coupon code below.</p><img id="qrImage" alt="Coupon QR code"><div class="demo-mark">BAKEHOUSE REWARDS</div><p id="qrCodeText" style="margin-top:10px;overflow-wrap:anywhere"></p><button type="button" class="coupon-ok-btn" id="qrDone">Back to My Coupons</button></section></div>
 <script>
 // Standalone extraction of the uploaded index.html game.
 // No external libraries or image assets. Original 11-level chain and canvas artwork retained.
@@ -152,6 +201,45 @@ var rewards={
   tart:{unlocked:false,claimed:false,code:''},
   giant:{unlocked:false,claimed:false,code:''}
 };
+// Each reward can be earned once per browser. No backend or merchant redemption.
+var STORAGE_KEY='bakehouse-merge-coupons-v1';
+var savedRewards={tart:false,giant:false};
+try{var saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');savedRewards.tart=saved.tart===true;savedRewards.giant=saved.giant===true;}catch(err){}
+function saveReward(which){
+ if(savedRewards[which])return false;
+ savedRewards[which]=true;
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(savedRewards));}catch(err){}
+ updateSavedCoupons();
+ return true;
+}
+function updateSavedCoupons(){
+ [['tart','Tart','HK$5 Voucher'],['giant','Giant','Free Sourdough Egg Tart']].forEach(function(item){
+  var which=item[0],suffix=item[1],earned=savedRewards[which];
+  $('saved'+suffix).classList.toggle('is-locked',!earned);
+  $('saved'+suffix+'Status').textContent=earned?'Unlocked · Saved in this browser. Open your virtual QR code.':(which==='tart'?'Locked · Merge an Egg Tart to unlock.':'Locked · Merge a Giant Tart to unlock.');
+  $('view'+suffix).disabled=!earned;
+  $('view'+suffix).textContent=earned?'View QR Code':'Locked';
+ });
+}
+var qrImages={tart:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANkAAADZAQAAAACFxajbAAABs0lEQVR4nO2YsY6cMBRFzwVWIKUwXUrmT8yXheHLFv4EynTQYQ3wUuxkt1olmZnIizSuLJ/mSEbv+iLj09UmnzN4wif8OxgkSVnQqZepYJQklfGE7oDOzHZy6xsjnUu8mS0xhe6AowTMvhWbm6BVFlfoJpi970I1cU7SJbLQY+BYY0Hl1xH6N4jZ4sxsTxc3gNbcBm9vh+cvZ/tHOEtKAPx5y+eSXlIRU+g2iP1eC3iD/P3ggLcSSmhNhbNWpLMkJYQyntAdcFZNugI0wPVypohCN8PcBrDcprE525pPvIV+PKE74HzqTUFl1QGhGsBsLiMK3QxDWXVsuY2qUQZV17Ad8FYywA10CsVPaPeXfML75BJN6N5h3EFqU9UB+YQ/73DMiGRsTKFwfd1oxVkH6QFfxhmEohra7WUFL9JZwI/NLZGEHpP2lRnp4swO+4FdWyQAFgrGGq3HjMiPFlm3lkHVoeyAD5cMYDyxE75P7WsCs0CXb1MkoUfAfDx5mS1ugD09YNp/FGJcL87kC91rcjnmBLu2SJugkV3L5DEn2LVFhhIvtmI+eTtkROr5z/gJ/yf8BdoU6t2UmnafAAAAAElFTkSuQmCC',giant:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANkAAADZAQAAAACFxajbAAABuklEQVR4nO2YPa6bQBRGzwWext3QpYSdwM6ApbyVPNiJ2QEUTwIJ+FKAkzRWHFNgIo80EtJpzmjm/mHi7qqC+wze8A0fg6OZmUUAVTBfaM3MLD5OaAf0khZGs7wg7GMyScORQjtgawaQ1CwAVOsdvajtA9A3eRXMl9cR+kcY/fpyXds0drjQTpjoVl0WXAeFpmOFnoa9mQWMMVkp18c0ZnY5Uuhp6CRJE31WY5PrEklSd5zQ83CMAUX4KzBfess55a0gDSSSTU7XTFusEEpS+XK2fz2K162gFIBXjWnwpzvKDa5BUi64NgWZ7w4Weg72VpQWjUmTb2392r+8qO39JQ3+mkkavKTtudnEWR9YYxa5jrXYt0W5hCdMxhFAUn+Vs/mOQh/fJDWGGw4S2tsZ5yiiT8HGS29mf8IjhJ6C6LYGyMotSBbOGSvbFOm6pNICtDk2ue44oR1wnSLx18wCIKkhPPcU2acwR/RmJfMJe7Dfoxe+yWuF3z86KrnvuHtB20eP0qeYxoj0U0F4mNDeuiIEJJ9fcqJNWT5OGPZs/4kIB8hEONySwOmScQRuG+y17g4wHSb0hv8X/AmpeNxT0IMkSwAAAABJRU5ErkJggg=='};
+var qrLastFocus=null;
+function showQR(which){
+ if(!savedRewards[which])return;
+ qrLastFocus=document.activeElement;
+ $('qrTitle').textContent=which==='tart'?'HK$5 Voucher':'Free Sourdough Egg Tart';
+ $('qrImage').src=qrImages[which];
+ $('qrCodeText').textContent='BAKEHOUSE-'+which.toUpperCase()+'-REWARD';
+ $('qrOverlay').hidden=false;
+ $('qrClose').focus();
+}
+function closeQR(){$('qrOverlay').hidden=true;if(qrLastFocus&&qrLastFocus.focus)qrLastFocus.focus();}
+$('viewTart').addEventListener('click',function(){showQR('tart');});
+$('viewGiant').addEventListener('click',function(){showQR('giant');});
+$('qrClose').addEventListener('click',closeQR);
+$('qrDone').addEventListener('click',closeQR);
+$('qrOverlay').addEventListener('click',function(e){if(e.target===this)closeQR();});
+$('qrOverlay').addEventListener('keydown',function(e){if(e.key==='Escape')closeQR();if(e.key==='Tab'){var b=Array.from(this.querySelectorAll('button'));if(e.shiftKey&&document.activeElement===b[0]){e.preventDefault();b[b.length-1].focus();}else if(!e.shiftKey&&document.activeElement===b[b.length-1]){e.preventDefault();b[0].focus();}}});
+updateSavedCoupons();
 // Track which reward overlay is currently open (null = none).
 var activeReward=null;
 function resizeCanvas(){var dpr=Math.min(window.devicePixelRatio||1,3);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
@@ -206,8 +294,8 @@ if(dist>minDist+.25)continue;
 if(b.level===o.level&&b.level<ITEMS.length-1){
 b.merged=true;o.merged=true;var newLevel=b.level+1,mx=(b.x+o.x)/2,my=(b.y+o.y)/2,nb=new Ball(newLevel,mx,my);nb.vy=-2;nb.popAnim=1;confine(nb);additions.push(nb);score+=(newLevel+1)*10;bestLevel=Math.max(bestLevel,newLevel);spawnMergeParticles(mx,my,ITEMS[newLevel].fill);
 // Unlock rewards on first merge into Egg Tart (level 9) or Giant Tart (level 10).
-if(newLevel===9&&!rewards.tart.unlocked){rewards.tart.unlocked=true;rewards.tart.code='BAKEHOUSE-TART-'+genCode();$('rewardBtn').hidden=false;pendingRewardShow='tart';}
-if(newLevel===10&&!rewards.giant.unlocked){rewards.giant.unlocked=true;rewards.giant.code='BAKEHOUSE-GIANT-'+genCode();$('reward2Btn').hidden=false;pendingRewardShow='giant';}
+if(newLevel===9&&!savedRewards.tart&&saveReward('tart')){rewards.tart.unlocked=true;rewards.tart.code='BAKEHOUSE-TART-ONE-TIME';$('rewardBtn').hidden=false;pendingRewardShow='tart';}
+if(newLevel===10&&!savedRewards.giant&&saveReward('giant')){rewards.giant.unlocked=true;rewards.giant.code='BAKEHOUSE-GIANT-ONE-TIME';$('reward2Btn').hidden=false;pendingRewardShow='giant';}
 break;
 }else{
 var nx=dist>.0001?dx/dist:1,ny=dist>.0001?dy/dist:0,overlap=Math.max(0,minDist-dist);b.x-=nx*overlap*.5;b.y-=ny*overlap*.5;o.x+=nx*overlap*.5;o.y+=ny*overlap*.5;var dot=(o.vx-b.vx)*nx+(o.vy-b.vy)*ny;if(dot<0){var impulse=dot*.5;b.vx+=impulse*nx;b.vy+=impulse*ny;o.vx-=impulse*nx;o.vy-=impulse*ny;}
@@ -253,8 +341,8 @@ var r=rewards[which];
 if(!r||!r.unlocked)return;
 paused=true;lastFocus=document.activeElement;
 // Populate overlay text per reward.
-if(which==='tart'){$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='🎉 You\'ve earned a HK$5 Voucher!';$('couponSub').textContent='Demo reward only — not redeemable in stores. Next goal: Merge the Giant Tart!';$('couponAmount').textContent='HK$5 Voucher';}
-else{$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='🏆 You\'ve earned a FREE Sourdough Egg Tart!';$('couponSub').textContent='Demo reward only — not redeemable in stores.';$('couponAmount').textContent='FREE Sourdough Egg Tart';}
+if(which==='tart'){$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='HK$5 Voucher Unlocked!';$('couponSub').textContent='Saved to My Coupons. Keep playing to unlock more treats!';$('couponAmount').textContent='HK$5 Voucher';}
+else{$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='Free Egg Tart Unlocked!';$('couponSub').textContent='Saved to My Coupons. Enjoy another round!';$('couponAmount').textContent='FREE Sourdough Egg Tart';}
 // Re-show code if already claimed. Both buttons always visible.
 if(r.claimed){$('couponDetails').hidden=false;$('claimBtn').hidden=true;$('copyBtn').focus();}else{$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('claimBtn').focus();}
 $('couponCode').textContent=r.code;
@@ -286,7 +374,7 @@ rewards.giant.unlocked=false;rewards.giant.claimed=false;rewards.giant.code='';
 $('couponOverlay').hidden=true;$('rewardBtn').hidden=true;$('reward2Btn').hidden=true;$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('copyBtn').textContent='Copy';
 currentLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));nextLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));renderNext();updateUI();}
 $('restartBtn').addEventListener('click',restartGame);
-resizeCanvas();buildLegend();restartGame();rafId=requestAnimationFrame(gameLoop);window.addEventListener('resize',resizeCanvas);document.addEventListener('visibilitychange',function(){lastTime=0;accumulator=0;});
+$('gameStage').appendChild($('couponOverlay'));resizeCanvas();buildLegend();restartGame();rafId=requestAnimationFrame(gameLoop);window.addEventListener('resize',resizeCanvas);document.addEventListener('visibilitychange',function(){lastTime=0;accumulator=0;});
 })();
 </script>
 </body>

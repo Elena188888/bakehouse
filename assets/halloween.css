@@ -11,3 +11,15 @@
 .hw-pet-close{top:5px;right:5px;bottom:auto;z-index:3;width:40px;height:40px;font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 2px 10px #402a5126}
 .hw-bubble{padding-right:46px}
 @media(max-width:700px){.hw-pet-close{top:4px;right:4px;bottom:auto;width:40px;height:40px}}
+
+/* Halloween feature: harmonious editorial typography and spacing */
+.hw-feature{padding-block:clamp(54px,7vw,92px);background:#fcf3e5}
+.hw-feature-inner{gap:clamp(32px,5vw,68px)}
+.hw-copy h2{font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(34px,3.5vw,49px)!important;font-weight:600!important;line-height:1.16!important;letter-spacing:-.03em!important;color:#36263f}
+.hw-copy h2 em{font-family:inherit!important;font-weight:400!important;font-style:italic;color:#a65029}
+.hw-copy .hw-eyebrow{font-family:'DM Sans',sans-serif!important;font-size:11px!important;letter-spacing:.17em!important;margin-bottom:18px!important}
+.hw-copy p{font-family:'DM Sans',sans-serif!important;font-size:15px!important;line-height:1.75!important;max-width:510px}
+.hw-photo img{border-radius:140px 140px 16px 16px;box-shadow:0 18px 40px rgba(54,38,63,.07)}
+.hw-photo-stamp{font-family:'DM Sans',sans-serif;letter-spacing:.1em}
+.hw-actions{margin-top:23px;gap:20px}.hw-primary{border-radius:9px!important;padding:14px 21px}.hw-link{font-family:'DM Sans',sans-serif}
+@media(max-width:700px){.hw-feature{padding:48px 20px}.hw-copy h2{font-size:clamp(32px,8vw,41px)!important}}
