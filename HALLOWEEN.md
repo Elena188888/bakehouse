@@ -1,6 +1,6 @@
 # Halloween at Bakehouse
 
-Adds a seasonal homepage hero and product feature, a Halloween egg tart in the existing catalogue, and Boo, a floating witch-hat ghost that tastes the exact product added to the cart. Eating is a visual interaction only: cart quantities, totals, persistence and checkout use the existing cart provider.
+Keeps the original all-season homepage hero and adds a Halloween product feature below it, a Halloween egg tart in the existing catalogue, and Boo, a floating witch-hat ghost that tastes the exact product added to the cart. Eating is a visual interaction only: cart quantities, totals, persistence and checkout use the existing cart provider.
 
 ## Maintenance
 
@@ -13,13 +13,21 @@ The new product uses the existing demo store's $43 egg tart price. Copy, ingredi
 - Add bread, pastries or cookies from the homepage, product cards, or product detail page to trigger a taste. Packaging and drinks do not trigger eating.
 - The companion uses the added product's image and name, with catch, nibble and celebration states.
 - Rapid additions queue independently of cart updates. Visual queue length is bounded to eight waiting treats.
-- Click Boo to say hello; minimize and restore controls work on every route.
+- Click Boo to say hello. The 40px close control is above the ghost, and the choice persists across page loads. A small restore control works on every route.
 - Animations respect `prefers-reduced-motion`. Buttons have accessible names and keyboard focus styles. Feedback is announced through a polite status region.
 - Notifications appear below the header; the existing scroll-to-top control is moved left to keep the pet clear.
 
 ## Product image
 
 `images/products/halloween-egg-tarts.jpg` was generated with the built-in image generation tool, then resized and JPEG-optimized for this website (1200 × 800).
+
+## Homepage photography
+
+The three original homepage slides remain in the same order and now use higher-resolution photographs:
+
+- `images/home/hero-egg-tarts.jpg` (1946 × 1557): [Bakehouse Occasions Signature Egg Tarts](https://occasions.bakehouse.hk/products/signature-egg-tarts), image served from Bakehouse's product page.
+- `images/home/hero-chef-store.jpg` (2400 × 1600): [BrandCraft Bakehouse project](https://brandcraft.hk/project/bakehouse), the source of the earlier low-resolution storefront photograph.
+- `images/home/hero-store-interior.jpg` (1778 × 1000): [Bakehouse locations](https://www.bakehouse.hk/locations), an official storefront photograph.
 
 Generation prompt:
 

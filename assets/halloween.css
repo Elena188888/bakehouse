@@ -6,3 +6,8 @@
 /* Keep existing controls clear of the companion. */
 .scroll-to-top{right:auto!important;left:20px!important}body:has(.hw-pet) [role=status].animate-slide-in{max-width:min(360px,calc(100vw - 32px))}body:has(.hw-pet) .fixed.bottom-4.right-4{right:auto;left:16px;top:80px;bottom:auto}
 .hw-ghost-button{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}.hw-dragging .hw-ghost-button{cursor:grabbing}.hw-dragging .hw-ghost-body{animation-play-state:paused}.hw-bubble{max-height:160px;pointer-events:auto}.hw-bubble p{margin:0}.hw-pet-cta{display:inline-flex;align-items:center;min-height:36px;color:#8b4525;font-weight:700;font-size:12px;text-decoration:underline;text-underline-offset:3px;margin-top:5px;pointer-events:auto}.hw-pet-cta:focus-visible{outline:3px solid #db914e;outline-offset:3px}.hw-pet-close{top:auto;bottom:150px}@media(max-width:700px){.hw-pet-close{top:auto;bottom:100px}.hw-pet-cta{font-size:12px}}
+
+/* The close control sits above the ghost and has a touch-sized target. */
+.hw-pet-close{top:5px;right:5px;bottom:auto;z-index:3;width:40px;height:40px;font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 2px 10px #402a5126}
+.hw-bubble{padding-right:46px}
+@media(max-width:700px){.hw-pet-close{top:4px;right:4px;bottom:auto;width:40px;height:40px}}
