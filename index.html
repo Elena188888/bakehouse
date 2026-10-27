@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>Bakehouse — A Modern Bakery Experience</title>
-    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027petrotatev4"></script>
+    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027peteatv1"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Gh48ig3V.css">
     <link rel="stylesheet" href="./assets/halloween.css?v=20261027petrotatev4">
     <link rel="stylesheet" href="./assets/typography.css">
@@ -27,34 +27,41 @@
       });
     </script>
     <script>
-      // Scroll to top only when the route actually changes.
-      // Never keep forcing the scroll position while the visitor scrolls.
-      (function () {
-        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-        var lastRoute = location.hash;
-        var sequence = 0;
-        function goTopAfterNavigation() {
-          var thisSequence = ++sequence;
-          // React renders the destination during the next animation frame.
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              if (thisSequence !== sequence) return;
-              window.scrollTo({top: 0, left: 0, behavior: 'instant'});
-            });
+      // Reset SPA navigation at the moment a link is clicked and after React renders.
+      (function(){
+        if ('scrollRestoration' in history) history.scrollRestoration='manual';
+        var token=0, previous=location.hash;
+        function topNow(){
+          window.scrollTo({left:0,top:0,behavior:'instant'});
+          document.documentElement.scrollTop=0;
+          document.body.scrollTop=0;
+        }
+        function reset(){
+          var id=++token;
+          document.documentElement.classList.add('route-resetting');
+          topNow();
+          // Render, images and font swapping can move the viewport after navigation.
+          [0,16,50,120,250,450,750,1150,1750,2300].forEach(function(t){
+            setTimeout(function(){if(id!==token)return;topNow();if(t===2300)document.documentElement.classList.remove('route-resetting')},t);
           });
         }
-        window.addEventListener('hashchange', function () {
-          if (location.hash === lastRoute) return;
-          lastRoute = location.hash;
-          goTopAfterNavigation();
-        });
-        // Direct visits to a nested page should start from its beginning.
-        window.addEventListener('pageshow', function (event) {
-          if (event.persisted) return;
-          if (location.hash && location.hash !== '#/') goTopAfterNavigation();
-        });
+        // React Router's Link uses click handlers before the hashchange occurs.
+        document.addEventListener('click',function(e){
+          if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+          var link=e.target.closest&&e.target.closest('a[href]');
+          if(!link)return;
+          var url;
+          try{url=new URL(link.href,location.href)}catch(_){return}
+          if(url.origin!==location.origin||url.pathname!==location.pathname)return;
+          if(url.hash && url.hash!==location.hash && url.hash.startsWith('#/')) reset();
+        },true);
+        window.addEventListener('hashchange',function(){if(location.hash!==previous){previous=location.hash;reset()}});
+        window.addEventListener('popstate',reset);
+        // Handle first load via a deep link too.
+        if(location.hash && location.hash!=='#/')window.addEventListener('load',reset,{once:true});
       })();
     </script>
+    <style>html.route-resetting,html.route-resetting body{scroll-behavior:auto!important;scroll-snap-type:none!important}</style>
   </head>
   <body>
     <div id="root"></div>
