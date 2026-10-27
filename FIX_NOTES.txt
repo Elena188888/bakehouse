@@ -1,0 +1,1 @@
+v2: improved route scroll reset with post-render retries and MutationObserver; retained HalloweenPet implementation from Pet_Restored. Note: live interaction not verified.
