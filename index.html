@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>Bakehouse — A Modern Bakery Experience</title>
-    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027e"></script>
+    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027pet"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Gh48ig3V.css">
     <link rel="stylesheet" href="./assets/halloween.css?v=20261027e">
     <link rel="stylesheet" href="./assets/typography.css">
@@ -25,6 +25,36 @@
           if (event.source === frame.contentWindow) frame.style.height = (h + 2) + 'px';
         });
       });
+    </script>
+    <script>
+      // React hash routes reuse the same document, so explicitly reset scroll
+      // when navigating to a different page (including a product detail).
+      (function () {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        let lastRoute = window.location.hash;
+        let navigationToken = 0;
+        function resetScroll() {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }
+        window.addEventListener('hashchange', function () {
+          const newRoute = window.location.hash;
+          if (newRoute === lastRoute || !newRoute.startsWith('#/')) return;
+          lastRoute = newRoute;
+          const token = ++navigationToken;
+          resetScroll();
+          // Allow the React route to paint before resetting the new page.
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              if (token === navigationToken) resetScroll();
+            });
+          });
+          setTimeout(function () {
+            if (token === navigationToken) resetScroll();
+          }, 120);
+        });
+      })();
     </script>
   </head>
   <body>
