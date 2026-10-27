@@ -17,7 +17,15 @@ export function createHalloweenUI({ React: R, jsx: a, Link, useCart, useToast, p
           h('p', { className: 'hw-caption' }, 'Add a treat to your cart. Our little ghost gets a taste, too.'))));
   }
   function HalloweenPet() {
-    const [hidden, setHidden] = R.useState(false);
+    const [hidden, setHidden] = R.useState(() => {
+      try { return window.localStorage.getItem('bakehouse:boo-hidden') === 'true'; }
+      catch { return false; }
+    });
+    const setPetHidden = value => {
+      setHidden(value);
+      try { window.localStorage.setItem('bakehouse:boo-hidden', String(value)); }
+      catch { /* The control still works when storage is unavailable. */ }
+    };
     const [current, setCurrent] = R.useState(null);
     const [phase, setPhase] = R.useState('idle');
     const [message, setMessage] = R.useState('Pick a pastry and tap Add to Cart. I’ll have a tiny taste!');
@@ -97,12 +105,12 @@ export function createHalloweenUI({ React: R, jsx: a, Link, useCart, useToast, p
       window.addEventListener('bakehouse:cart-treat', onTreat);
       return () => { mounted = false; window.removeEventListener('bakehouse:cart-treat', onTreat); timers.current.forEach(clearTimeout); queue.current = []; busy.current = false; };
     }, []);
-    if (hidden) return h('button', { className: 'hw-pet-restore', type: 'button', onClick: () => setHidden(false), 'aria-label': 'Show Boo the Halloween ghost' }, '👻');
+    if (hidden) return h('button', { className: 'hw-pet-restore', type: 'button', onClick: () => setPetHidden(false), 'aria-label': 'Show Boo the Halloween ghost', title: 'Show Boo' }, '👻');
     return h('aside', { ref: pet, style: position ? { left: position.left, top: position.top, right: 'auto', bottom: 'auto' } : undefined, className: `hw-pet hw-${phase}${active ? ' hw-active' : ''}${dragging ? ' hw-dragging' : ''}`, 'aria-label': 'Boo, your Halloween bakery companion' },
       h('div', { className: 'hw-bubble' },
         h('p', { role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' }, message),
         h(Link, { className: 'hw-pet-cta', to: '/menu', onClick: () => setMessage('Choose your favourite, then tap Add to Cart. I’m ready!') }, 'Find your next treat →')),
-      h('button', { className: 'hw-pet-close', type: 'button', onClick: () => setHidden(true), 'aria-label': 'Minimize Halloween pet' }, '×'),
+      h('button', { className: 'hw-pet-close', type: 'button', onClick: () => setPetHidden(true), 'aria-label': 'Close Boo the Halloween ghost', title: 'Close Boo' }, '×'),
       h('button', { className: 'hw-ghost-button', type: 'button', 'aria-label': 'Say hello to Boo. Drag to move, or use arrow keys.', 'aria-describedby': 'hw-drag-hint', onPointerDown: startDrag, onPointerMove: moveDrag, onPointerUp: endDrag, onPointerCancel: endDrag, onLostPointerCapture: () => { if (drag.current?.moved) suppressClick.current = Date.now() + 500; drag.current = null; setDragging(false); }, onKeyDown: moveWithKeyboard, onClick: () => { if (suppressClick.current > Date.now()) return; setActive(true); if (!busy.current) setMessage(['Pick a pastry and tap Add to Cart. I’ll taste it with you!', 'A croissant, a cookie, or an egg tart? Add your favourite to your cart.', 'Want a sweet little treat? Explore the menu below.'][Math.floor(Math.random() * 3)]); } },
         h('svg', { className: 'hw-ghost', viewBox: '0 0 180 190', fill: 'none', 'aria-hidden': true },
           h('ellipse', { cx: 91, cy: 179, rx: 45, ry: 7, fill: '#402a51', opacity: '.12' }),
