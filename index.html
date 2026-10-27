@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/bakehouse/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Bakehouse — A Modern Bakery Experience. Fresh bread, pastries, cakes, and coffee. Good things bring people together." />
     <meta name="author" content="Student Group AI Project" />
@@ -10,13 +10,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>Bakehouse — A Modern Bakery Experience</title>
-    <script type="module" crossorigin src="/bakehouse/assets/index-halloween.js?v=20261027c"></script>
-    <link rel="stylesheet" crossorigin href="/bakehouse/assets/index-Gh48ig3V.css">
-    <link rel="stylesheet" href="/bakehouse/assets/halloween.css?v=20261027">
-    <link rel="stylesheet" href="/bakehouse/assets/typography.css">
+    <script type="module" crossorigin src="./assets/index-halloween.js?v=20261027c"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Gh48ig3V.css">
+    <link rel="stylesheet" href="./assets/halloween.css?v=20261027">
+    <link rel="stylesheet" href="./assets/typography.css">
+    <script>
+      // Keep the embedded merge game at its natural height on mobile/desktop.
+      window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin) return;
+        if (!event.data || event.data.type !== 'bakehouse:game-height') return;
+        var h = Number(event.data.height);
+        if (!Number.isFinite(h) || h < 300 || h > 3000) return;
+        document.querySelectorAll('iframe[src*="game.html?embedded=1"]').forEach(function(frame) {
+          if (event.source === frame.contentWindow) frame.style.height = (h + 8) + 'px';
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
   </body>
 </html>
-

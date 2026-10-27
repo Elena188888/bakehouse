@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakehouse Merge — Giant Egg Tart</title>
+<meta name="description" content="Merge matching bakery treats into a giant egg tart. A bakery merge mini game for the Bakehouse student website.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fcf3e5;
+  --card:#fff8e9;
+  --card-2:#fffaf1;
+  --ink:#36263f;
+  --ink-2:#67566b;
+  --ink-3:#9b4e25;
+  --accent:#432c57;
+  --accent-hover:#70446d;
+  --accent-text:#fff8e9;
+  --border:#e5d4bc;
+  --gold:#bd642f;
+  --gold-soft:rgba(189,100,47,.12);
+  --shadow-sm:0 1px 4px rgba(54,38,63,.06);
+  --shadow-md:0 4px 24px rgba(54,38,63,.08);
+  --r:5px;
+  --r-lg:18px;
+}
+body{
+  font-family:'DM Sans',Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:18px;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,canvas:focus-visible{outline:3px solid #db914e;outline-offset:4px}[hidden]{display:none!important}
+.site-top{max-width:1200px;margin:auto;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.wordmark{font-family:Georgia,serif;font-size:27px;font-weight:bold;color:var(--ink);letter-spacing:-.01em}
+.home-link{font:500 14px 'DM Sans',Arial,sans-serif;color:var(--accent)}
+.home-link:hover{color:var(--accent-hover)}
+.container{max-width:1040px;margin:0 auto;padding:0 24px}#game{padding:24px 0 20px}
+.game-head{text-align:center;margin-bottom:36px}
+.eyebrow{font:700 11px 'DM Sans',Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:12px}
+h1{font-family:Georgia,serif;font-size:clamp(32px,6vw,48px);color:var(--ink);font-weight:700;line-height:1.08;letter-spacing:-.02em}
+.game-head p{max-width:520px;margin:16px auto 0;color:var(--ink-2);font-size:16px;font-family:'DM Sans',Arial,sans-serif}
+.game-wrap{display:flex;gap:2rem;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.game-side{width:200px;display:flex;flex-direction:column;gap:1rem}.game-side-l{order:0}.game-side-r{order:2}
+.game-stage{order:1;position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-md);background:var(--card-2);width:520px;max-width:100%}
+.game-stage canvas{display:block;touch-action:none;cursor:pointer;width:100%;height:auto}
+.game-overline{position:absolute;top:7.353%;left:0;right:0;border-top:2px dashed rgba(196,54,54,.5);z-index:5;pointer-events:none}
+.game-info-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem 1.2rem;box-shadow:var(--shadow-sm)}
+.gi-label{font:700 10px 'DM Sans',Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.3rem}
+.gi-value{font-size:1.8rem;font-weight:700;color:var(--accent);line-height:1;font-family:'DM Sans',Arial,sans-serif}
+.game-preview-box{text-align:center}.game-preview-box .gi-label{margin-bottom:.8rem}
+.game-preview-icon{width:64px;height:64px;margin:0 auto;border-radius:50%;background:var(--card-2);display:flex;align-items:center;justify-content:center;border:2px solid var(--gold-soft)}
+.game-legend{display:flex;flex-direction:column;gap:.5rem}
+.game-legend-item{display:flex;align-items:center;gap:.6rem;font:12px 'DM Sans',Arial,sans-serif;color:var(--ink-2)}
+.game-legend-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0}
+.game-restart-btn{display:block;width:100%;padding:.9rem;border:none;background:var(--accent);color:var(--accent-text);border-radius:var(--r);font:600 14px 'DM Sans',Arial,sans-serif;transition:background .2s,transform .2s}
+.game-restart-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.reward-btn-inline{background:var(--gold);color:var(--accent-text)}.reward-btn-inline:hover{background:#a05025}
+.game-hint{font:12px/1.6 'DM Sans',Arial,sans-serif;color:var(--ink-2);text-align:center}
+.site-footer{text-align:center;padding:24px 24px 40px;font:12px/1.7 'DM Sans',Arial,sans-serif;color:var(--ink-2)}
+.coupon-overlay{position:fixed;inset:0;z-index:2000;background:rgba(54,38,63,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.coupon-card{background:var(--card);border-radius:20px;max-width:420px;width:100%;padding:2.5rem 1.6rem;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow:auto;border:1px solid var(--border)}
+.coupon-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.5rem;color:var(--ink-2);padding:.3rem;cursor:pointer}
+.coupon-title{font-family:Georgia,serif;font-size:1.8rem;color:var(--ink);margin-bottom:.3rem;font-weight:700}
+.coupon-sub{font-size:.95rem;color:var(--ink-2);margin-bottom:1.2rem;font-family:'DM Sans',Arial,sans-serif}
+.coupon-amount{font-size:2.4rem;font-weight:700;color:var(--accent);margin-bottom:1rem;font-family:'DM Sans',Arial,sans-serif}
+.coupon-code-box{background:var(--card-2);border:1.5px dashed var(--gold);border-radius:var(--r);padding:.8rem;margin:1rem 0;display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.coupon-code{font:700 15px 'Courier New',monospace;color:var(--ink);overflow-wrap:anywhere}
+.copy-btn{background:var(--accent);color:var(--accent-text);border:none;border-radius:var(--r);padding:.7rem .9rem;font:600 12px 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background .2s}
+.copy-btn:hover{background:var(--accent-hover)}
+.coupon-ok-btn{display:block;width:100%;padding:.9rem;background:var(--accent);color:var(--accent-text);border:none;border-radius:var(--r);font:600 14px 'DM Sans',Arial,sans-serif;letter-spacing:.02em;margin-top:10px;cursor:pointer;transition:background .2s,transform .2s}
+.coupon-ok-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+@media(max-width:900px){.game-wrap{max-width:740px;margin:auto;gap:20px}.game-side{width:100%;flex-direction:row;flex-wrap:wrap;gap:12px}.game-info-box{flex:1;min-width:100px}.game-legend{display:none}.game-side-r{align-items:center}.game-side-r>.game-restart-btn,.game-side-r>.reward-btn-inline{flex:1;min-width:120px}.game-hint{width:100%}.game-stage{flex-shrink:0}}
+@media(max-width:420px){.container{padding:0 14px}.site-top{padding:16px}.game-info-box{padding:16px}.game-side-r{gap:10px}.game-head p{font-size:15px}}
+
+/* Embedded mode is visually part of the main Bakehouse website. */
+html.embed-mode,body.embed-mode{background:transparent;overflow-x:hidden}
+.embed-mode .site-top,.embed-mode .game-head,.embed-mode .site-footer{display:none!important}
+.embed-mode #game{padding:8px 0 20px}
+.embed-mode .container{max-width:1100px;padding:0 10px}
+.embed-mode .game-wrap{gap:20px;align-items:flex-start}
+.embed-mode .game-stage{border:1px solid var(--border);box-shadow:0 8px 32px rgba(54,38,63,.08)}
+.embed-mode .game-info-box{border-radius:14px;background:#fffaf1}
+.embed-mode .game-restart-btn{border-radius:11px}
+@media(max-width:900px){.embed-mode .game-wrap{max-width:650px}.embed-mode .game-side-l{order:0}.embed-mode .game-stage{order:1}.embed-mode .game-side-r{order:2}.embed-mode .game-side{justify-content:center}}
+@media(max-width:580px){.embed-mode .container{padding:0 4px}.embed-mode .game-wrap{gap:12px}.embed-mode .game-side{gap:8px}.embed-mode .game-info-box{padding:12px}.embed-mode .game-stage{width:100%}.embed-mode .game-hint{font-size:12px}.embed-mode #game{padding-top:2px}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  if(new URLSearchParams(location.search).get('embedded') !== '1') return;
+  document.documentElement.classList.add('embed-mode');
+  document.body.classList.add('embed-mode');
+  function syncHeight(){
+    if(window.parent===window)return;
+    var h=Math.ceil(document.documentElement.scrollHeight);
+    window.parent.postMessage({type:'bakehouse:game-height',height:h},window.location.origin);
+  }
+  window.addEventListener('load',syncHeight);
+  window.addEventListener('resize',syncHeight);
+  if('ResizeObserver' in window){new ResizeObserver(syncHeight).observe(document.body);}
+  setTimeout(syncHeight,100);
+})();
+</script>
+<header class="site-top"><span class="wordmark">Bakehouse</span><a class="home-link" href="./index.html">&larr; Back to Home</a></header>
+<main id="game"><div class="container">
+<div class="game-head"><span class="eyebrow">Mini Game</span><h1>Bakehouse Merge</h1><p>Drop bakery items to merge matching pairs. Build your way up to the Giant Egg Tart and win a reward!</p></div>
+<div class="game-wrap">
+<div class="game-side game-side-l"><div class="game-info-box"><div class="gi-label">Score</div><div class="gi-value" id="gameScore">0</div></div><div class="game-info-box"><div class="gi-label">Best Merge</div><div class="gi-value" id="gameBest" style="font-size:1rem">&mdash;</div></div><div class="game-legend" id="gameLegend"></div></div>
+<div class="game-stage" id="gameStage"><div class="game-overline" id="gameOverline"></div><canvas id="gameCanvas" tabindex="0" aria-label="Bakery merge game. Move pointer and tap to drop. Keyboard: arrow keys to aim, Space to drop.">Your browser needs Canvas support to play.</canvas></div>
+<div class="game-side game-side-r"><div class="game-info-box game-preview-box"><div class="gi-label">Next Item</div><div class="game-preview-icon"><canvas id="nextCanvas" width="56" height="56" aria-label="Next bakery item"></canvas></div></div><button class="game-restart-btn" id="restartBtn">Restart</button><button class="game-restart-btn reward-btn-inline" id="rewardBtn" hidden>View HK$5 Demo Reward</button><button class="game-restart-btn reward-btn-inline" id="reward2Btn" hidden>View Free Tart Demo Reward</button><p class="game-hint">Move pointer to aim. Click or tap to drop.<br>Merge matching treats. Don&rsquo;t cross the red line!</p></div>
+</div></div></main>
+<div class="coupon-overlay" id="couponOverlay" hidden><section class="coupon-card" role="dialog" aria-modal="true" aria-labelledby="couponTitle"><button class="coupon-close" id="closeBtn" aria-label="Close and continue playing">&times;</button><div class="eyebrow" id="couponEyebrow">Reward unlocked</div><h2 class="coupon-title" id="couponTitle">Egg Tart!</h2><p class="coupon-sub" id="couponSub">You baked a fresh egg tart.</p><div class="coupon-amount" id="couponAmount">HK$5 Reward</div><div class="coupon-code-box" id="couponDetails" hidden><span class="coupon-code" id="couponCode"></span><button class="copy-btn" id="copyBtn">Copy</button></div><button class="coupon-ok-btn" id="claimBtn">Reveal Demo Code</button><button class="coupon-ok-btn" id="continueBtn">Keep Playing</button></section></div>
+<script>
+// Standalone extraction of the uploaded index.html game.
+// No external libraries or image assets. Original 11-level chain and canvas artwork retained.
+(function(){
+'use strict';
+var ITEMS=[
+{name:'Crumb',radius:16,fill:'#E8C88A',accent:'#C49A54'},
+{name:'Cookie',radius:22,fill:'#D4A45A',accent:'#A87A3A'},
+{name:'Croissant',radius:30,fill:'#D99B4A',accent:'#A06820'},
+{name:'Donut',radius:38,fill:'#C4853E',accent:'#8A5818'},
+{name:'Danish',radius:47,fill:'#B07030',accent:'#7A4818'},
+{name:'Pretzel',radius:57,fill:'#9A5E22',accent:'#6A3E12'},
+{name:'Sausage Roll',radius:68,fill:'#8A4E1A',accent:'#5A300E'},
+{name:'Pain au Choc',radius:80,fill:'#7A3E12',accent:'#4A2408'},
+{name:'Sourdough',radius:94,fill:'#6B3A10',accent:'#3A1E06'},
+{name:'Egg Tart',radius:110,fill:'#E8A038',accent:'#C47818'},
+{name:'Giant Tart',radius:135,fill:'#F0B840',accent:'#D49020'}];
+var MAX_SPAWN_LEVEL=4;
+var MIN_SPAWN_LEVEL=1;
+var RED_LINE_Y=50;
+var $=function(id){return document.getElementById(id)};
+var canvas=$('gameCanvas'),ctx=canvas.getContext('2d'),nextCanvas=$('nextCanvas'),nextCtx=nextCanvas.getContext('2d');
+// Fixed logical playfield; CSS scales it without changing the physics on mobile.
+var W=520,H=680,GRAVITY=.45,BOUNCE=.25,FRICTION=.99,WALL_PAD=4;
+var balls=[],particles=[],score=0,bestLevel=-1,nextLevel=0,currentLevel=0,aimX=W/2,canDrop=true,dropCooldown=0,gameOver=false;
+var paused=false,lastFocus=null,rafId=null,lastTime=0,accumulator=0,pendingRewardShow=null;
+var COLORS={bg:'#FFFCF7',dangerLine:'rgba(220,60,60,.45)',cream:'#FBF5EA'};
+// Reward state: each reward earned once per game, code persists while unclaimed.
+var rewards={
+  tart:{unlocked:false,claimed:false,code:''},
+  giant:{unlocked:false,claimed:false,code:''}
+};
+// Track which reward overlay is currently open (null = none).
+var activeReward=null;
+function resizeCanvas(){var dpr=Math.min(window.devicePixelRatio||1,3);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+// Original procedural bakery illustrations.
+function drawItem(c,level,x,y,r,alpha){
+if(alpha===undefined)alpha=1;var item=ITEMS[level];if(!item)return;r=Math.max(2,r);c.save();c.globalAlpha=alpha;
+c.beginPath();c.arc(x,y+r*.06,r*.92,0,Math.PI*2);c.fillStyle='rgba(92,58,30,.12)';c.fill();
+if(level<=1){
+c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fillStyle=item.fill;c.fill();c.fillStyle=item.accent;var dots=level===0?3:5;
+for(var i=0;i<dots;i++){var ang=i/dots*Math.PI*2,dr=r*.5;c.beginPath();c.arc(x+Math.cos(ang)*dr,y+Math.sin(ang)*dr,r*.12,0,Math.PI*2);c.fill();}
+c.beginPath();c.arc(x-r*.3,y-r*.3,r*.3,0,Math.PI*2);c.fillStyle='rgba(255,255,255,.2)';c.fill();
+}else if(level===2){
+c.fillStyle=item.fill;c.beginPath();c.arc(x,y,r*.85,Math.PI*.3,Math.PI*1.7);c.arc(x,y,r*.5,Math.PI*1.7,Math.PI*.3,true);c.closePath();c.fill();c.strokeStyle=item.accent;c.lineWidth=r*.08;
+for(var k=-1;k<=1;k++){c.beginPath();c.arc(x,y,r*.65,Math.PI*.5+k*.4,Math.PI*.5+k*.4+.6);c.stroke();}
+}else if(level===3){
+c.fillStyle=item.fill;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.beginPath();c.arc(x,y,r*.32,0,Math.PI*2);c.fillStyle=COLORS.bg;c.fill();c.fillStyle=item.accent;c.beginPath();c.arc(x-r*.35,y-r*.35,r*.18,0,Math.PI*2);c.fill();
+}else if(level===4){
+c.fillStyle=item.fill;c.beginPath();var s=r*.85;c.moveTo(x-s,y-s);c.arc(x-s,y-s,r*.3,Math.PI,Math.PI*1.5);c.lineTo(x+s,y-s);c.arc(x+s,y-s,r*.3,Math.PI*1.5,0);c.lineTo(x+s,y+s);c.arc(x+s,y+s,r*.3,0,Math.PI*.5);c.lineTo(x-s,y+s);c.arc(x-s,y+s,r*.3,Math.PI*.5,Math.PI);c.closePath();c.fill();c.strokeStyle=item.accent;c.lineWidth=r*.1;c.beginPath();c.arc(x,y,r*.3,0,Math.PI*1.5);c.stroke();
+}else if(level===5){
+c.strokeStyle=item.fill;c.lineWidth=r*.28;c.lineCap='round';c.beginPath();c.arc(x-r*.35,y-r*.1,r*.38,Math.PI*.8,Math.PI*2.2);c.arc(x+r*.35,y-r*.1,r*.38,Math.PI*.8,Math.PI*2.2);c.moveTo(x-r*.35,y+r*.15);c.quadraticCurveTo(x,y+r*.5,x+r*.35,y+r*.15);c.stroke();c.lineWidth=r*.16;c.beginPath();c.moveTo(x-r*.7,y+r*.3);c.lineTo(x+r*.7,y+r*.3);c.stroke();c.fillStyle='rgba(255,255,255,.6)';c.beginPath();c.arc(x-r*.2,y-r*.1,r*.06,0,Math.PI*2);c.fill();c.beginPath();c.arc(x+r*.15,y+r*.15,r*.06,0,Math.PI*2);c.fill();
+}else if(level===6){
+c.fillStyle=item.fill;c.beginPath();c.roundRect(x-r*.8,y-r*.4,r*1.6,r*.8,r*.2);c.fill();c.fillStyle=item.accent;c.beginPath();c.arc(x-r*.8,y,r*.4,-Math.PI*.5,Math.PI*.5);c.arc(x+r*.8,y,r*.4,Math.PI*.5,Math.PI*1.5);c.fill();c.strokeStyle='rgba(0,0,0,.15)';c.lineWidth=r*.04;
+for(var si=-1;si<=1;si++){c.beginPath();c.moveTo(x+si*r*.35,y-r*.32);c.lineTo(x+si*r*.35,y+r*.32);c.stroke();}
+}else if(level===7){
+c.fillStyle=item.fill;c.beginPath();c.roundRect(x-r*.8,y-r*.7,r*1.6,r*1.4,r*.15);c.fill();c.fillStyle='#3A1A08';c.fillRect(x-r*.6,y-r*.12,r*.5,r*.24);c.fillRect(x+r*.1,y-r*.12,r*.5,r*.24);c.strokeStyle=item.accent;c.lineWidth=r*.04;
+for(var ll=0;ll<3;ll++){c.beginPath();c.moveTo(x-r*.7+ll*r*.5,y-r*.6);c.lineTo(x-r*.4+ll*r*.5,y+r*.6);c.stroke();}
+}else if(level===8){
+c.fillStyle=item.fill;c.beginPath();c.ellipse(x,y,r*.95,r*.85,0,0,Math.PI*2);c.fill();c.strokeStyle=item.accent;c.lineWidth=r*.06;c.beginPath();c.arc(x,y-r*.15,r*.35,Math.PI*.8,Math.PI*2.2);c.stroke();c.beginPath();c.arc(x,y-r*.15,r*.55,Math.PI*.8,Math.PI*2.2);c.stroke();c.fillStyle='rgba(255,250,235,.3)';
+for(var d=0;d<6;d++){c.beginPath();c.arc(x+(d-3)*r*.2,y+(d%2-.5)*r*.3,r*.04,0,Math.PI*2);c.fill();}
+}else if(level===9){
+c.fillStyle=item.accent;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.fillStyle=item.fill;c.beginPath();c.arc(x,y,r*.75,0,Math.PI*2);c.fill();c.fillStyle='rgba(255,255,255,.25)';c.beginPath();c.ellipse(x-r*.2,y-r*.25,r*.3,r*.15,-.3,0,Math.PI*2);c.fill();c.strokeStyle=item.accent;c.lineWidth=r*.08;c.beginPath();c.arc(x,y,r*.88,0,Math.PI*2);c.stroke();
+}else if(level===10){
+var grad=c.createRadialGradient(x,y,r*.3,x,y,r*1.3);grad.addColorStop(0,'rgba(240,184,64,.4)');grad.addColorStop(1,'rgba(240,184,64,0)');c.fillStyle=grad;c.beginPath();c.arc(x,y,r*1.3,0,Math.PI*2);c.fill();c.fillStyle=item.accent;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.fillStyle=item.fill;c.beginPath();c.arc(x,y,r*.78,0,Math.PI*2);c.fill();c.fillStyle='rgba(255,255,255,.3)';c.beginPath();c.ellipse(x-r*.25,y-r*.3,r*.35,r*.18,-.3,0,Math.PI*2);c.fill();c.fillStyle='#FFF';
+for(var st=0;st<5;st++){var sa=st/5*Math.PI*2;drawStar(c,x+Math.cos(sa)*r*.5,y+Math.sin(sa)*r*.5,r*.06,r*.03,4);}
+}
+if(level<9){c.strokeStyle='rgba(54,33,14,.15)';c.lineWidth=1;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.stroke();}c.restore();
+}
+function drawStar(c,cx,cy,outerR,innerR,points){c.beginPath();for(var i=0;i<points*2;i++){var rad=i%2===0?outerR:innerR,a=i/(points*2)*Math.PI*2-Math.PI/2,px=cx+Math.cos(a)*rad,py=cy+Math.sin(a)*rad;if(i===0)c.moveTo(px,py);else c.lineTo(px,py);}c.closePath();c.fill();}
+function Ball(level,x,y){this.level=level;this.x=x;this.y=y;this.vx=0;this.vy=0;this.r=ITEMS[level].radius;this.merged=false;this.popAnim=0;this.age=0;this.dangerFrames=0;}
+function confine(b){if(b.x-b.r<WALL_PAD){b.x=WALL_PAD+b.r;b.vx=Math.abs(b.vx)*BOUNCE;}if(b.x+b.r>W-WALL_PAD){b.x=W-WALL_PAD-b.r;b.vx=-Math.abs(b.vx)*BOUNCE;}if(b.y+b.r>H-WALL_PAD){b.y=H-WALL_PAD-b.r;b.vy=-Math.abs(b.vy)*BOUNCE;if(Math.abs(b.vy)<.5)b.vy=0;}}
+function physicsStep(){
+var i,j,b,o;
+for(i=0;i<balls.length;i++){b=balls[i];b.age++;b.vy+=GRAVITY;b.vx*=FRICTION;b.vy*=FRICTION;b.x+=b.vx;b.y+=b.vy;confine(b);}
+// New bodies enter after the pass; each original may participate in one merge only.
+var additions=[];
+for(i=0;i<balls.length;i++){
+b=balls[i];if(b.merged)continue;
+for(j=i+1;j<balls.length;j++){
+o=balls[j];if(o.merged)continue;
+var dx=o.x-b.x,dy=o.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),minDist=b.r+o.r;
+if(dist>minDist+.25)continue;
+if(b.level===o.level&&b.level<ITEMS.length-1){
+b.merged=true;o.merged=true;var newLevel=b.level+1,mx=(b.x+o.x)/2,my=(b.y+o.y)/2,nb=new Ball(newLevel,mx,my);nb.vy=-2;nb.popAnim=1;confine(nb);additions.push(nb);score+=(newLevel+1)*10;bestLevel=Math.max(bestLevel,newLevel);spawnMergeParticles(mx,my,ITEMS[newLevel].fill);
+// Unlock rewards on first merge into Egg Tart (level 9) or Giant Tart (level 10).
+if(newLevel===9&&!rewards.tart.unlocked){rewards.tart.unlocked=true;rewards.tart.code='BAKEHOUSE-TART-'+genCode();$('rewardBtn').hidden=false;pendingRewardShow='tart';}
+if(newLevel===10&&!rewards.giant.unlocked){rewards.giant.unlocked=true;rewards.giant.code='BAKEHOUSE-GIANT-'+genCode();$('reward2Btn').hidden=false;pendingRewardShow='giant';}
+break;
+}else{
+var nx=dist>.0001?dx/dist:1,ny=dist>.0001?dy/dist:0,overlap=Math.max(0,minDist-dist);b.x-=nx*overlap*.5;b.y-=ny*overlap*.5;o.x+=nx*overlap*.5;o.y+=ny*overlap*.5;var dot=(o.vx-b.vx)*nx+(o.vy-b.vy)*ny;if(dot<0){var impulse=dot*.5;b.vx+=impulse*nx;b.vy+=impulse*ny;o.vx-=impulse*nx;o.vy-=impulse*ny;}
+}
+}
+}
+balls=balls.filter(function(b){return !b.merged}).concat(additions);
+for(i=0;i<balls.length;i++){confine(balls[i]);balls[i].popAnim=Math.max(0,balls[i].popAnim-.05);}
+if(additions.length)updateUI();
+// Immediate red-line detection after collision resolution: if any dropped/merged item's
+// top edge reaches or crosses the red line, trigger Game Over. Exclude the aiming preview
+// (it is drawn separately, not in balls[]). No velocity or waiting requirement.
+if(!gameOver&&!paused){
+for(i=0;i<balls.length;i++){
+if(balls[i].y-balls[i].r<=RED_LINE_Y){gameOver=true;break;}
+}
+}
+// If a reward was unlocked this step, pause to show it (after red-line check).
+if(pendingRewardShow){showCoupon(pendingRewardShow);pendingRewardShow=null;}
+}
+function spawnMergeParticles(x,y,color){for(var i=0;i<12;i++){var ang=i/12*Math.PI*2,sp=2+Math.random()*3;particles.push({x:x,y:y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-1,life:1,color:color,size:3+Math.random()*3});}}
+function updateParticles(){for(var i=particles.length-1;i>=0;i--){var p=particles[i];p.vy+=.2;p.x+=p.vx;p.y+=p.vy;p.life-=.025;if(p.life<=0)particles.splice(i,1);}}
+function render(){
+ctx.clearRect(0,0,W,H);ctx.fillStyle=COLORS.bg;ctx.fillRect(0,0,W,H);ctx.strokeStyle=COLORS.dangerLine;ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.beginPath();ctx.moveTo(0,RED_LINE_Y);ctx.lineTo(W,RED_LINE_Y);ctx.stroke();ctx.setLineDash([]);
+for(var i=0;i<particles.length;i++){var p=particles[i];ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
+for(var k=0;k<balls.length;k++){var b=balls[k];drawItem(ctx,b.level,b.x,b.y,b.r,1);if(b.popAnim>0){ctx.strokeStyle=ITEMS[b.level].fill;ctx.globalAlpha=b.popAnim*.5;ctx.lineWidth=3;ctx.beginPath();ctx.arc(b.x,b.y,b.r*(1.5-b.popAnim),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}}
+if(!gameOver&&canDrop&&!paused){var itemR=ITEMS[currentLevel].radius;ctx.strokeStyle='rgba(92,58,30,.15)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(aimX,RED_LINE_Y+itemR+8);ctx.lineTo(aimX,H-WALL_PAD);ctx.stroke();ctx.setLineDash([]);drawItem(ctx,currentLevel,aimX,RED_LINE_Y+itemR+4,itemR,.8);}
+if(gameOver){ctx.fillStyle='rgba(54,33,14,.75)';ctx.fillRect(0,0,W,H);ctx.fillStyle=COLORS.cream;ctx.font='600 32px Georgia,serif';ctx.textAlign='center';ctx.fillText('Game Over',W/2,H/2-14);ctx.font='16px Arial,sans-serif';ctx.fillText('Score: '+score,W/2,H/2+22);ctx.fillText('Press Restart to play again',W/2,H/2+48);}
+}
+function renderNext(){nextCtx.clearRect(0,0,56,56);drawItem(nextCtx,nextLevel,28,28,Math.min(24,ITEMS[nextLevel].radius*.6),1);nextCanvas.setAttribute('aria-label','Next item: '+ITEMS[nextLevel].name);}
+// Red-line Game Over is now checked inside physicsStep immediately after collision resolution.
+function clampAim(){var r=ITEMS[currentLevel].radius;aimX=Math.max(r+WALL_PAD,Math.min(W-r-WALL_PAD,aimX));}
+function drop(){if(gameOver||paused||!canDrop)return;clampAim();balls.push(new Ball(currentLevel,aimX,RED_LINE_Y+ITEMS[currentLevel].radius+4));canDrop=false;dropCooldown=25;currentLevel=nextLevel;nextLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));clampAim();renderNext();}
+function genCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
+// Fixed 60 Hz simulation to avoid different speeds on high-refresh displays.
+function gameLoop(time){if(!lastTime)lastTime=time;var dt=Math.min(50,time-lastTime);lastTime=time;if(!paused&&!gameOver){accumulator+=dt;while(accumulator>=1000/60){physicsStep();updateParticles();if(dropCooldown>0){dropCooldown--;if(dropCooldown===0)canDrop=true;}accumulator-=1000/60;if(paused||gameOver){accumulator=0;break;}}}else accumulator=0;render();rafId=requestAnimationFrame(gameLoop);}
+function updateUI(){$('gameScore').textContent=score;$('gameBest').textContent=bestLevel>=0?ITEMS[bestLevel].name:'—';}
+function buildLegend(){var legend=$('gameLegend');ITEMS.forEach(function(item,idx){var div=document.createElement('div');div.className='game-legend-item';var cvs=document.createElement('canvas');cvs.width=24;cvs.height=24;cvs.style.width='24px';cvs.style.height='24px';cvs.style.flexShrink='0';cvs.style.display='block';var c=cvs.getContext('2d');var r=Math.min(10,item.radius);drawItem(c,idx,12,12,r,1);var txt=document.createElement('span');txt.textContent=item.name;div.appendChild(cvs);div.appendChild(txt);legend.appendChild(div);});}
+function showCoupon(which){
+which=which||activeReward||'tart';
+activeReward=which;
+var r=rewards[which];
+if(!r||!r.unlocked)return;
+paused=true;lastFocus=document.activeElement;
+// Populate overlay text per reward.
+if(which==='tart'){$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='🎉 You\'ve earned a HK$5 Voucher!';$('couponSub').textContent='Demo reward only — not redeemable in stores. Next goal: Merge the Giant Tart!';$('couponAmount').textContent='HK$5 Voucher';}
+else{$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='🏆 You\'ve earned a FREE Sourdough Egg Tart!';$('couponSub').textContent='Demo reward only — not redeemable in stores.';$('couponAmount').textContent='FREE Sourdough Egg Tart';}
+// Re-show code if already claimed. Both buttons always visible.
+if(r.claimed){$('couponDetails').hidden=false;$('claimBtn').hidden=true;$('copyBtn').focus();}else{$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('claimBtn').focus();}
+$('couponCode').textContent=r.code;
+$('couponOverlay').hidden=false;
+}
+function closeCoupon(){$('couponOverlay').hidden=true;activeReward=null;lastTime=0;
+// If game was over (reward+game-over simultaneity), do not resume the lost game.
+// Only unpause if the game is still running.
+if(!gameOver)paused=false;
+if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+$('claimBtn').addEventListener('click',function(){if(!activeReward)return;rewards[activeReward].claimed=true;$('couponDetails').hidden=false;$('claimBtn').hidden=true;$('copyBtn').focus();});
+$('closeBtn').addEventListener('click',closeCoupon);$('continueBtn').addEventListener('click',closeCoupon);
+$('rewardBtn').addEventListener('click',function(){showCoupon('tart');});
+$('reward2Btn').addEventListener('click',function(){showCoupon('giant');});
+$('copyBtn').addEventListener('click',async function(){var btn=this;if(!activeReward)return;var code=rewards[activeReward].code;try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(code);btn.textContent='Copied!';}catch(e){var ta=document.createElement('textarea');ta.value=code;$('couponDetails').appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy')}catch(ignore){}ta.remove();btn.textContent=ok?'Copied!':'Select code to copy';}setTimeout(function(){btn.textContent='Copy'},2200);});
+$('couponOverlay').addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefault();closeCoupon();}if(e.key==='Tab'){var controls=Array.from(this.querySelectorAll('button')).filter(function(b){return b.getClientRects().length>0}),first=controls[0],last=controls[controls.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+function getCanvasX(clientX){var rect=canvas.getBoundingClientRect();return(clientX-rect.left)*W/rect.width;}
+var activePointer=null;
+canvas.addEventListener('pointermove',function(e){aimX=getCanvasX(e.clientX);clampAim();});
+canvas.addEventListener('pointerdown',function(e){if(!e.isPrimary||e.button!==0)return;e.preventDefault();activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);canvas.focus();aimX=getCanvasX(e.clientX);clampAim();});
+canvas.addEventListener('pointerup',function(e){if(e.pointerId!==activePointer)return;e.preventDefault();activePointer=null;aimX=getCanvasX(e.clientX);clampAim();drop();});
+canvas.addEventListener('pointercancel',function(){activePointer=null;});
+canvas.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();aimX+=e.key==='ArrowLeft'?-12:12;clampAim();}if(e.code==='Space'||e.key==='Enter'){e.preventDefault();if(!e.repeat)drop();}});
+function restartGame(){balls=[];particles=[];score=0;bestLevel=-1;gameOver=false;paused=false;canDrop=true;dropCooldown=0;accumulator=0;lastTime=0;activePointer=null;aimX=W/2;pendingRewardShow=null;activeReward=null;
+// Reset reward state in place (mutate, not reassign) so external references stay valid.
+rewards.tart.unlocked=false;rewards.tart.claimed=false;rewards.tart.code='';
+rewards.giant.unlocked=false;rewards.giant.claimed=false;rewards.giant.code='';
+$('couponOverlay').hidden=true;$('rewardBtn').hidden=true;$('reward2Btn').hidden=true;$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('copyBtn').textContent='Copy';
+currentLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));nextLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));renderNext();updateUI();}
+$('restartBtn').addEventListener('click',restartGame);
+resizeCanvas();buildLegend();restartGame();rafId=requestAnimationFrame(gameLoop);window.addEventListener('resize',resizeCanvas);document.addEventListener('visibilitychange',function(){lastTime=0;accumulator=0;});
+})();
+</script>
+</body>
+</html>
