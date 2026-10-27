@@ -46,3 +46,11 @@
 
 /* Pet v3: draggable on any viewport. */
 .hw-pet{z-index:90;touch-action:none}.hw-ghost-button{touch-action:none;cursor:grab}.hw-ghost-button:active{cursor:grabbing}.hw-pet-name{white-space:nowrap;font-size:9px}.hw-bubble{width:230px;max-width:calc(100vw - 20px);opacity:1;transform:none}.hw-pet-close{z-index:4}.hw-pet-restore{z-index:90}
+
+/* v4: display compact messages after the first scroll, then rotate them. */
+.hw-pet .hw-bubble{opacity:0;visibility:hidden;transform:translateY(8px);pointer-events:none;max-height:none;overflow:visible;box-sizing:border-box;width:240px;max-width:min(240px,calc(100vw - 24px));margin-left:-54px;padding:12px 14px;font-size:13px;line-height:1.45;text-wrap:pretty}
+.hw-pet.hw-active .hw-bubble{opacity:1;visibility:visible;transform:translateY(0)}
+.hw-pet .hw-bubble p{overflow-wrap:break-word}
+@media(max-width:700px){.hw-pet .hw-bubble{width:198px;max-width:min(198px,calc(100vw - 20px));margin-left:-70px}}
+
+.hw-pet:not(.hw-active):hover .hw-bubble,.hw-pet:not(.hw-active):focus-within .hw-bubble{opacity:0;visibility:hidden;transform:translateY(8px)}

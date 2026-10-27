@@ -1,0 +1,1 @@
+Pet message bubble appears after user scrolls down 80px and rotates every 4.2 seconds between original greetings and Tap me to play Bakehouse Merge and unlock bakery coupons! Removed Drag me anywhere sentence. Dragging the pet still works, tapping still navigates to #/game. Original website files unchanged otherwise.

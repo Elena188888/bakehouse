@@ -20,12 +20,34 @@ export function createHalloweenUI({React,jsx,Link,products}) {
  function HalloweenPet(){
   const [visible,setVisible]=React.useState(true);
   const [position,setPosition]=React.useState(null);
-  const [showHint,setShowHint]=React.useState(true);
+  const [showHint,setShowHint]=React.useState(false);
+  const [messageIndex,setMessageIndex]=React.useState(0);
+  const messages=[
+    'Hi! I’m your little Bakehouse buddy. Tap me for a treat!',
+    'A little treat makes any day sweeter!',
+    'Freshly baked happiness, coming right up!',
+    'Thanks for saying hello! Have a sweet day!',
+    'Tap me to play Bakehouse Merge and unlock bakery coupons!'
+  ];
+  React.useEffect(function(){
+    var started=false;
+    function onScroll(){
+      if(!started && window.scrollY>80){started=true;setShowHint(true)}
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});
+    onScroll();
+    return function(){window.removeEventListener('scroll',onScroll)};
+  },[]);
+  React.useEffect(function(){
+    if(!showHint||!visible)return;
+    var id=setInterval(function(){setMessageIndex(i=>(i+1)%messages.length)},4200);
+    return function(){clearInterval(id)};
+  },[showHint,visible]);
   const drag=React.useRef(null);
   const suppressClick=React.useRef(false);
   const posRef=React.useRef(null);
   posRef.current=position;
-  const hint='Tap me to play Bakehouse Merge and unlock bakery coupons! Drag me anywhere on the page.';
+
   function moveStart(e){
     if(e.button!==0 && e.pointerType==='mouse')return;
     e.preventDefault();
@@ -44,7 +66,8 @@ export function createHalloweenUI({React,jsx,Link,products}) {
     const left=Math.max(0,Math.min(window.innerWidth-w,d.left+dx));
     const top=Math.max(0,Math.min(window.innerHeight-h,d.top+dy));
     setPosition({left,top});
-    setShowHint(false);
+    // Keep the rotating bubble available after dragging.
+
   }
   function moveEnd(e){
     const d=drag.current;
@@ -64,7 +87,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
   if(!visible)return h('button',{type:'button',className:'hw-pet-restore',onClick:()=>{setVisible(true);setShowHint(true)},title:'Show Bakehouse buddy','aria-label':'Show Bakehouse buddy'},'👻');
   const style=position?{left:position.left+'px',top:position.top+'px',right:'auto',bottom:'auto'}:undefined;
   return h('aside',{className:'hw-pet'+(drag.current?.moved?' hw-dragging':'')+(showHint?' hw-active':''),style,'aria-label':'Draggable Bakehouse ghost companion'},
-    h('div',{className:'hw-bubble',role:'status'},h('p',null,hint)),
+    h('div',{className:'hw-bubble',role:'status','aria-live':'polite'},h('p',null,messages[messageIndex])),
     h('button',{type:'button',className:'hw-ghost-button',onPointerDown:moveStart,onPointerMove:moveDrag,onPointerUp:moveEnd,onPointerCancel:()=>{drag.current=null},onClick:clickPet,'aria-label':'Play Bakehouse Merge to unlock coupons; drag this ghost to move it'},
       h('svg',{className:'hw-ghost',viewBox:'0 0 180 185','aria-hidden':'true',xmlns:'http://www.w3.org/2000/svg'},
         h('g',{className:'hw-ghost-body'},
@@ -73,7 +96,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
           h('ellipse',{cx:56,cy:111,rx:9,ry:5,fill:'#f1b5ab',opacity:'.7'}),h('ellipse',{cx:124,cy:111,rx:9,ry:5,fill:'#f1b5ab',opacity:'.7'}),
           h('path',{className:'hw-mouth',d:'M80 113 Q90 125 100 113',fill:'none',stroke:'#2a365a',strokeWidth:'3.5',strokeLinecap:'round'})
         )),h('span',{className:'hw-sparkles','aria-hidden':'true'},'✦ ✨')),
-    h('span',{className:'hw-pet-name'},'DRAG ME · TAP FOR COUPONS'),
+    h('span',{className:'hw-pet-name'},'BAKEHOUSE BUDDY'),
     h('button',{type:'button',className:'hw-pet-close',onClick:()=>setVisible(false),title:'Hide Bakehouse buddy','aria-label':'Hide Bakehouse buddy'},'×'));
  }
 
