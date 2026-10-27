@@ -161,7 +161,7 @@ html.embed-mode,body.embed-mode{min-height:0!important;height:auto!important;ove
 <div class="game-wrap">
 <div class="game-side game-side-l"><div class="game-info-box"><div class="gi-label">Score</div><div class="gi-value" id="gameScore">0</div></div><div class="game-info-box"><div class="gi-label">Best Merge</div><div class="gi-value" id="gameBest" style="font-size:1rem">&mdash;</div></div><div class="game-legend" id="gameLegend"></div></div>
 <div class="game-stage" id="gameStage"><div class="game-overline" id="gameOverline"></div><canvas id="gameCanvas" tabindex="0" aria-label="Bakery merge game. Move pointer and tap to drop. Keyboard: arrow keys to aim, Space to drop.">Your browser needs Canvas support to play.</canvas></div>
-<div class="game-side game-side-r"><div class="game-info-box game-preview-box"><div class="gi-label">Next Item</div><div class="game-preview-icon"><canvas id="nextCanvas" width="56" height="56" aria-label="Next bakery item"></canvas></div></div><button class="game-restart-btn" id="restartBtn">Restart</button><button class="game-restart-btn reward-btn-inline" id="rewardBtn" hidden>View HK$5 Reward</button><button class="game-restart-btn reward-btn-inline" id="reward2Btn" hidden>View Free Tart Reward</button><div class="game-rules"><strong>Play as often as you like!</strong>Each coupon can only be earned once per browser. Restart and replay anytime; previously unlocked rewards remain in My Coupons.</div><p class="game-hint">Move pointer to aim. Click or tap to drop.<br>Merge matching treats. Don&rsquo;t cross the red line!</p></div>
+<div class="game-side game-side-r"><div class="game-info-box game-preview-box"><div class="gi-label">Next Item</div><div class="game-preview-icon"><canvas id="nextCanvas" width="56" height="56" aria-label="Next bakery item"></canvas></div></div><button class="game-restart-btn" id="restartBtn">Restart</button><button class="game-restart-btn reward-btn-inline" id="rewardBtn" hidden>View HK$5 Reward</button><button class="game-restart-btn reward-btn-inline" id="reward2Btn" hidden>View Free Tart Reward</button><button class="game-restart-btn reward-btn-inline" id="reward3Btn" hidden>View Afternoon Tea Reward</button><div class="game-rules"><strong>Play as often as you like!</strong>Earn each reward once per browser: merge an Egg Tart for HK$5, merge a Giant Tart for a free tart, or score 20,000 points for an afternoon tea set (selection varies by store). Play as often as you like!</div><p class="game-hint">Move pointer to aim. Click or tap to drop.<br>Merge matching treats. Don&rsquo;t cross the red line!</p></div>
 </div>
 <section class="my-coupons" id="myCoupons" aria-labelledby="myCouponsTitle">
 <h2 class="coupon-heading" id="myCouponsTitle">My Coupons</h2>
@@ -169,6 +169,7 @@ html.embed-mode,body.embed-mode{min-height:0!important;height:auto!important;ove
 <div class="saved-coupons" id="savedCoupons" aria-live="polite">
 <article class="saved-coupon is-locked" id="savedTart"><span class="small-label">Reward 01</span><h3>HK$5 Voucher</h3><p id="savedTartStatus">Locked · Merge an Egg Tart to unlock.</p><button type="button" id="viewTart" disabled>Locked</button></article>
 <article class="saved-coupon is-locked" id="savedGiant"><span class="small-label">Reward 02</span><h3>Free Sourdough Egg Tart</h3><p id="savedGiantStatus">Locked · Merge a Giant Tart to unlock.</p><button type="button" id="viewGiant" disabled>Locked</button></article>
+<article class="saved-coupon is-locked" id="savedTea"><span class="small-label">Reward 03</span><h3>Afternoon Tea Set</h3><p id="savedTeaStatus">Locked · Reach 20,000 points to unlock. Selection varies by store.</p><button type="button" id="viewTea" disabled>Locked</button></article>
 </div>
 <p class="game-hint" style="margin-top:16px">Coupons are saved in this browser. Each reward can be earned once.</p>
 </section></div></main>
@@ -200,17 +201,18 @@ var canvas=$('gameCanvas'),ctx=canvas.getContext('2d'),nextCanvas=$('nextCanvas'
 // Fixed logical playfield; CSS scales it without changing the physics on mobile.
 var W=520,H=680,GRAVITY=.45,BOUNCE=.25,FRICTION=.99,WALL_PAD=4;
 var balls=[],particles=[],score=0,bestLevel=-1,nextLevel=0,currentLevel=0,aimX=W/2,canDrop=true,dropCooldown=0,gameOver=false;
-var paused=false,lastFocus=null,rafId=null,lastTime=0,accumulator=0,pendingRewardShow=null;
+var paused=false,lastFocus=null,rafId=null,lastTime=0,accumulator=0,pendingRewardShow=null,pendingRewardQueue=[];
 var COLORS={bg:'#FFFCF7',dangerLine:'rgba(220,60,60,.45)',cream:'#FBF5EA'};
 // Reward state: each reward earned once per game, code persists while unclaimed.
 var rewards={
   tart:{unlocked:false,claimed:false,code:''},
-  giant:{unlocked:false,claimed:false,code:''}
+  giant:{unlocked:false,claimed:false,code:''},
+  tea:{unlocked:false,claimed:false,code:''}
 };
 // Each reward can be earned once per browser. No backend or merchant redemption.
 var STORAGE_KEY='bakehouse-merge-coupons-v1';
-var savedRewards={tart:false,giant:false};
-try{var saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');savedRewards.tart=saved.tart===true;savedRewards.giant=saved.giant===true;}catch(err){}
+var savedRewards={tart:false,giant:false,tea:false};
+try{var saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');savedRewards.tart=saved.tart===true;savedRewards.giant=saved.giant===true;savedRewards.tea=saved.tea===true;}catch(err){}
 function saveReward(which){
  if(savedRewards[which])return false;
  savedRewards[which]=true;
@@ -219,20 +221,21 @@ function saveReward(which){
  return true;
 }
 function updateSavedCoupons(){
- [['tart','Tart','HK$5 Voucher'],['giant','Giant','Free Sourdough Egg Tart']].forEach(function(item){
+ [['tart','Tart','HK$5 Voucher'],['giant','Giant','Free Sourdough Egg Tart'],['tea','Tea','Afternoon Tea Set']].forEach(function(item){
   var which=item[0],suffix=item[1],earned=savedRewards[which];
   $('saved'+suffix).classList.toggle('is-locked',!earned);
-  $('saved'+suffix+'Status').textContent=earned?'Unlocked · Saved in this browser. Open your virtual QR code.':(which==='tart'?'Locked · Merge an Egg Tart to unlock.':'Locked · Merge a Giant Tart to unlock.');
+  $('saved'+suffix+'Status').textContent=earned?'Unlocked · Saved in this browser. Open your virtual QR code.':(which==='tart'?'Locked · Merge an Egg Tart to unlock.':which==='giant'?'Locked · Merge a Giant Tart to unlock.':'Locked · Reach 20,000 points to unlock. Selection varies by store.');
   $('view'+suffix).disabled=!earned;
   $('view'+suffix).textContent=earned?'View QR Code':'Locked';
  });
 }
 var qrImages={tart:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANkAAADZAQAAAACFxajbAAABs0lEQVR4nO2YsY6cMBRFzwVWIKUwXUrmT8yXheHLFv4EynTQYQ3wUuxkt1olmZnIizSuLJ/mSEbv+iLj09UmnzN4wif8OxgkSVnQqZepYJQklfGE7oDOzHZy6xsjnUu8mS0xhe6AowTMvhWbm6BVFlfoJpi970I1cU7SJbLQY+BYY0Hl1xH6N4jZ4sxsTxc3gNbcBm9vh+cvZ/tHOEtKAPx5y+eSXlIRU+g2iP1eC3iD/P3ggLcSSmhNhbNWpLMkJYQyntAdcFZNugI0wPVypohCN8PcBrDcprE525pPvIV+PKE74HzqTUFl1QGhGsBsLiMK3QxDWXVsuY2qUQZV17Ad8FYywA10CsVPaPeXfML75BJN6N5h3EFqU9UB+YQ/73DMiGRsTKFwfd1oxVkH6QFfxhmEohra7WUFL9JZwI/NLZGEHpP2lRnp4swO+4FdWyQAFgrGGq3HjMiPFlm3lkHVoeyAD5cMYDyxE75P7WsCs0CXb1MkoUfAfDx5mS1ugD09YNp/FGJcL87kC91rcjnmBLu2SJugkV3L5DEn2LVFhhIvtmI+eTtkROr5z/gJ/yf8BdoU6t2UmnafAAAAAElFTkSuQmCC',giant:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANkAAADZAQAAAACFxajbAAABuklEQVR4nO2YPa6bQBRGzwWext3QpYSdwM6ApbyVPNiJ2QEUTwIJ+FKAkzRWHFNgIo80EtJpzmjm/mHi7qqC+wze8A0fg6OZmUUAVTBfaM3MLD5OaAf0khZGs7wg7GMyScORQjtgawaQ1CwAVOsdvajtA9A3eRXMl9cR+kcY/fpyXds0drjQTpjoVl0WXAeFpmOFnoa9mQWMMVkp18c0ZnY5Uuhp6CRJE31WY5PrEklSd5zQ83CMAUX4KzBfess55a0gDSSSTU7XTFusEEpS+XK2fz2K162gFIBXjWnwpzvKDa5BUi64NgWZ7w4Weg72VpQWjUmTb2392r+8qO39JQ3+mkkavKTtudnEWR9YYxa5jrXYt0W5hCdMxhFAUn+Vs/mOQh/fJDWGGw4S2tsZ5yiiT8HGS29mf8IjhJ6C6LYGyMotSBbOGSvbFOm6pNICtDk2ue44oR1wnSLx18wCIKkhPPcU2acwR/RmJfMJe7Dfoxe+yWuF3z86KrnvuHtB20eP0qeYxoj0U0F4mNDeuiIEJJ9fcqJNWT5OGPZs/4kIB8hEONySwOmScQRuG+y17g4wHSb0hv8X/AmpeNxT0IMkSwAAAABJRU5ErkJggg=='};
+qrImages.tea='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJsAAACbAQAAAABdGtQhAAABVUlEQVR4nO2WMXLbQBAEe4ngkN394PgRA+S/5BJY4r8M2h8BfgBkhyoA40BSBDlxcTNtdhPM1Ezt7a6JQ42nIwbf4AGUmVlrP8924WZmyU09SsUUHuU3lbQ/hfNr8GYwrzlsidEujkKA0mZ2nZ7K+Q/wTviVnIVeBVHCJrJ6P6HZrIb7OLdpMzs5CSFJ0k4l7fH9MTj9o8S4nOJytutoVit5Ogo9lYppzcHLEZJWaCBD7MDcomPu0NtUDaGf16wteUW3x5Vi0wtB6rL66OYICFsOWk68DvXTOA+gTdVg13FFPXfmi5PQezMETdVQmrjm0jhFh3YqFSDTAMWr6z4nQ3wb1EcNBUdHQBNX4FPNq72l0mrNYY8aaN2i22NHaaiGsAPh4TcZAGwiL1d1ufxI7qeRbqZH/Wdy3rDruFzYznitiY8Nq3Rr61ZBNE/hPJZ9397/C/4FRCDMYYY0VwgAAAAASUVORK5CYII=';
 var qrLastFocus=null;
 function showQR(which){
  if(!savedRewards[which])return;
  qrLastFocus=document.activeElement;
- $('qrTitle').textContent=which==='tart'?'HK$5 Voucher':'Free Sourdough Egg Tart';
+ $('qrTitle').textContent=which==='tart'?'HK$5 Voucher':which==='giant'?'Free Sourdough Egg Tart':'Afternoon Tea Set';
  $('qrImage').src=qrImages[which];
  $('qrCodeText').textContent='BAKEHOUSE-'+which.toUpperCase()+'-REWARD';
  $('qrOverlay').hidden=false;
@@ -241,6 +244,7 @@ function showQR(which){
 function closeQR(){$('qrOverlay').hidden=true;if(qrLastFocus&&qrLastFocus.focus)qrLastFocus.focus();}
 $('viewTart').addEventListener('click',function(){showQR('tart');});
 $('viewGiant').addEventListener('click',function(){showQR('giant');});
+$('viewTea').addEventListener('click',function(){showQR('tea');});
 $('qrClose').addEventListener('click',closeQR);
 $('qrDone').addEventListener('click',closeQR);
 $('qrOverlay').addEventListener('click',function(e){if(e.target===this)closeQR();});
@@ -298,7 +302,9 @@ o=balls[j];if(o.merged)continue;
 var dx=o.x-b.x,dy=o.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),minDist=b.r+o.r;
 if(dist>minDist+.25)continue;
 if(b.level===o.level&&b.level<ITEMS.length-1){
-b.merged=true;o.merged=true;var newLevel=b.level+1,mx=(b.x+o.x)/2,my=(b.y+o.y)/2,nb=new Ball(newLevel,mx,my);nb.vy=-2;nb.popAnim=1;confine(nb);additions.push(nb);score+=(newLevel+1)*10;bestLevel=Math.max(bestLevel,newLevel);spawnMergeParticles(mx,my,ITEMS[newLevel].fill);
+b.merged=true;o.merged=true;var newLevel=b.level+1,mx=(b.x+o.x)/2,my=(b.y+o.y)/2,nb=new Ball(newLevel,mx,my);nb.vy=-2;nb.popAnim=1;confine(nb);additions.push(nb);score+=(newLevel+1)*10;
+if(score>=20000&&!savedRewards.tea&&saveReward('tea')){rewards.tea.unlocked=true;rewards.tea.code='BAKEHOUSE-TEA-20000';$('reward3Btn').hidden=false;pendingRewardQueue.push('tea');}
+bestLevel=Math.max(bestLevel,newLevel);spawnMergeParticles(mx,my,ITEMS[newLevel].fill);
 // Unlock rewards on first merge into Egg Tart (level 9) or Giant Tart (level 10).
 if(newLevel===9&&!savedRewards.tart&&saveReward('tart')){rewards.tart.unlocked=true;rewards.tart.code='BAKEHOUSE-TART-ONE-TIME';$('rewardBtn').hidden=false;pendingRewardShow='tart';}
 if(newLevel===10&&!savedRewards.giant&&saveReward('giant')){rewards.giant.unlocked=true;rewards.giant.code='BAKEHOUSE-GIANT-ONE-TIME';$('reward2Btn').hidden=false;pendingRewardShow='giant';}
@@ -320,7 +326,8 @@ if(balls[i].y-balls[i].r<=RED_LINE_Y){gameOver=true;break;}
 }
 }
 // If a reward was unlocked this step, pause to show it (after red-line check).
-if(pendingRewardShow){showCoupon(pendingRewardShow);pendingRewardShow=null;}
+if(pendingRewardShow){pendingRewardQueue.unshift(pendingRewardShow);pendingRewardShow=null;}
+if(pendingRewardQueue.length&&!paused){showCoupon(pendingRewardQueue.shift());}
 }
 function spawnMergeParticles(x,y,color){for(var i=0;i<12;i++){var ang=i/12*Math.PI*2,sp=2+Math.random()*3;particles.push({x:x,y:y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-1,life:1,color:color,size:3+Math.random()*3});}}
 function updateParticles(){for(var i=particles.length-1;i>=0;i--){var p=particles[i];p.vy+=.2;p.x+=p.vx;p.y+=p.vy;p.life-=.025;if(p.life<=0)particles.splice(i,1);}}
@@ -348,7 +355,8 @@ if(!r||!r.unlocked)return;
 paused=true;lastFocus=document.activeElement;
 // Populate overlay text per reward.
 if(which==='tart'){$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='HK$5 Voucher Unlocked!';$('couponSub').textContent='Saved to My Coupons. Keep playing to unlock more treats!';$('couponAmount').textContent='HK$5 Voucher';}
-else{$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='Free Egg Tart Unlocked!';$('couponSub').textContent='Saved to My Coupons. Enjoy another round!';$('couponAmount').textContent='FREE Sourdough Egg Tart';}
+else if(which==='giant'){$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='Free Egg Tart Unlocked!';$('couponSub').textContent='Saved to My Coupons. Enjoy another round!';$('couponAmount').textContent='FREE Sourdough Egg Tart';}
+else{$('couponEyebrow').textContent='Reward unlocked';$('couponTitle').textContent='Afternoon Tea Set Unlocked!';$('couponSub').textContent='20,000 points reached! Saved to My Coupons. Afternoon tea selection varies by store.';$('couponAmount').textContent='Afternoon Tea Set';}
 // Re-show code if already claimed. Both buttons always visible.
 if(r.claimed){$('couponDetails').hidden=false;$('claimBtn').hidden=true;$('copyBtn').focus();}else{$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('claimBtn').focus();}
 $('couponCode').textContent=r.code;
@@ -358,12 +366,14 @@ function closeCoupon(){$('couponOverlay').hidden=true;activeReward=null;lastTime
 // If game was over (reward+game-over simultaneity), do not resume the lost game.
 // Only unpause if the game is still running.
 if(!gameOver)paused=false;
+if(pendingRewardQueue.length){showCoupon(pendingRewardQueue.shift());}
 if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
 $('claimBtn').addEventListener('click',function(){if(!activeReward)return;rewards[activeReward].claimed=true;$('couponDetails').hidden=false;$('claimBtn').hidden=true;$('copyBtn').focus();});
 $('closeBtn').addEventListener('click',closeCoupon);$('continueBtn').addEventListener('click',closeCoupon);
 $('rewardBtn').addEventListener('click',function(){showCoupon('tart');});
 $('reward2Btn').addEventListener('click',function(){showCoupon('giant');});
+$('reward3Btn').addEventListener('click',function(){showCoupon('tea');});
 $('copyBtn').addEventListener('click',async function(){var btn=this;if(!activeReward)return;var code=rewards[activeReward].code;try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(code);btn.textContent='Copied!';}catch(e){var ta=document.createElement('textarea');ta.value=code;$('couponDetails').appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy')}catch(ignore){}ta.remove();btn.textContent=ok?'Copied!':'Select code to copy';}setTimeout(function(){btn.textContent='Copy'},2200);});
 $('couponOverlay').addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefault();closeCoupon();}if(e.key==='Tab'){var controls=Array.from(this.querySelectorAll('button')).filter(function(b){return b.getClientRects().length>0}),first=controls[0],last=controls[controls.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 function getCanvasX(clientX){var rect=canvas.getBoundingClientRect();return(clientX-rect.left)*W/rect.width;}
@@ -373,11 +383,12 @@ canvas.addEventListener('pointerdown',function(e){if(!e.isPrimary||e.button!==0)
 canvas.addEventListener('pointerup',function(e){if(e.pointerId!==activePointer)return;e.preventDefault();activePointer=null;aimX=getCanvasX(e.clientX);clampAim();drop();});
 canvas.addEventListener('pointercancel',function(){activePointer=null;});
 canvas.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();aimX+=e.key==='ArrowLeft'?-12:12;clampAim();}if(e.code==='Space'||e.key==='Enter'){e.preventDefault();if(!e.repeat)drop();}});
-function restartGame(){balls=[];particles=[];score=0;bestLevel=-1;gameOver=false;paused=false;canDrop=true;dropCooldown=0;accumulator=0;lastTime=0;activePointer=null;aimX=W/2;pendingRewardShow=null;activeReward=null;
+function restartGame(){balls=[];particles=[];score=0;bestLevel=-1;gameOver=false;paused=false;canDrop=true;dropCooldown=0;accumulator=0;lastTime=0;activePointer=null;aimX=W/2;pendingRewardShow=null;pendingRewardQueue=[];activeReward=null;
 // Reset reward state in place (mutate, not reassign) so external references stay valid.
 rewards.tart.unlocked=false;rewards.tart.claimed=false;rewards.tart.code='';
 rewards.giant.unlocked=false;rewards.giant.claimed=false;rewards.giant.code='';
-$('couponOverlay').hidden=true;$('rewardBtn').hidden=true;$('reward2Btn').hidden=true;$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('copyBtn').textContent='Copy';
+rewards.tea.unlocked=false;rewards.tea.claimed=false;rewards.tea.code='';
+$('couponOverlay').hidden=true;$('rewardBtn').hidden=true;$('reward2Btn').hidden=true;$('reward3Btn').hidden=true;$('couponDetails').hidden=true;$('claimBtn').hidden=false;$('copyBtn').textContent='Copy';
 currentLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));nextLevel=MIN_SPAWN_LEVEL+Math.floor(Math.random()*(MAX_SPAWN_LEVEL-MIN_SPAWN_LEVEL+1));renderNext();updateUI();}
 $('restartBtn').addEventListener('click',restartGame);
 $('gameStage').appendChild($('couponOverlay'));resizeCanvas();buildLegend();restartGame();rafId=requestAnimationFrame(gameLoop);window.addEventListener('resize',resizeCanvas);document.addEventListener('visibilitychange',function(){lastTime=0;accumulator=0;});

@@ -1,20 +1,3 @@
-BAKEHOUSE PASTRIES — SINGLE SERVING UPDATE
-
-All Pastries listings now show prices for ONE item; quantity increments represent pieces, not boxes.
-Per-piece figures computed from published Bakehouse Occasions catering box prices; these are calculated equivalents, not confirmed standalone retail prices.
-Mini croissant 300/20=HK$15
-Mini pain au chocolat 330/15=HK$22
-Mini apple danish 330/15=HK$22
-Mini banana danish 330/15=HK$22
-Mini blueberry danish 414/18=HK$23
-Mini ham cheese danish 450/15=HK$30
-Mini sausage roll 560/20=HK$28
-Mini parmesan danish 300/15=HK$20
-Mini doughnut 390/15=HK$26
-Plain scone 624/24=HK$26
-Mini cookie 384/24=HK$16
-
-Product imagery: where available, the SECOND image from each Bakehouse Occasions product page is used via its official website CDN URL. These image assets require an internet connection and remain hosted by Bakehouse Occasions.
-Some products have multiple flavours; the single image is one illustrative official variant.
-
-No other website files intentionally modified.
+Bakehouse update — Halloween blue palette, sourdough journal photo, 20,000-point afternoon tea reward.
+The afternoon tea set is a browser-local project reward; store availability and redemption require backend validation.
+Cookies unchanged from original menu, Pastries retain previous single-serving edits.

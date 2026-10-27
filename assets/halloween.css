@@ -33,3 +33,13 @@
 .hw-eyebrow{color:#aa562f!important}
 .hw-photo img{border-radius:100px 100px 20px 20px!important}
 @media(max-width:700px){.hw-feature{padding-bottom:42px!important}.hw-copy h2{font-size:clamp(38px,10vw,51px)!important}}
+
+/* 2026 Bakehouse brand palette – Halloween editorial section */
+.hw-feature{background:linear-gradient(180deg,#fbf5eb 0%,#f7f9fd 86%,#fff 100%);color:#103978}
+.hw-copy h2{color:#103978}
+.hw-copy h2 em{color:#1c4e90;font-style:italic}
+.hw-copy p,.hw-copy .hw-caption{color:#58749b}
+.hw-photo-stamp,.hw-primary{background:#103978;color:#fff}
+.hw-primary:hover{background:#1f59a0}
+.hw-link{color:#103978;border-bottom-color:#93b5d9}
+.hw-feature:before{color:#9bbadb}
