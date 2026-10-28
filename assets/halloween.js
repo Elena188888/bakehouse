@@ -26,7 +26,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
   const [current,setCurrent]=React.useState(null);
   const [phase,setPhase]=React.useState('idle');
   const [message,setMessage]=React.useState('Pick a pastry and tap Add to Cart. I’ll have a tiny taste!');
-  const [active,setActive]=React.useState(true);
+  const [active,setActive]=React.useState(false);
   const pet=React.useRef(null);
   const drag=React.useRef(null);
   const suppressClick=React.useRef(false);
@@ -47,6 +47,17 @@ export function createHalloweenUI({React,jsx,Link,products}) {
    const resize=()=>setPosition(previous=>previous?clampPosition(previous.left,previous.top):null);
    window.addEventListener('resize',resize);
    return ()=>window.removeEventListener('resize',resize);
+  },[]);
+  React.useEffect(()=>{
+   let scrollTimer;
+   const onScroll=()=>{
+    pet.current?.classList.add('hw-scrolling');
+    setActive(false);
+    clearTimeout(scrollTimer);
+    scrollTimer=setTimeout(()=>pet.current?.classList.remove('hw-scrolling'),220);
+   };
+   window.addEventListener('scroll',onScroll,{passive:true});
+   return ()=>{window.removeEventListener('scroll',onScroll);clearTimeout(scrollTimer)};
   },[]);
   React.useEffect(()=>{
    let mounted=true;

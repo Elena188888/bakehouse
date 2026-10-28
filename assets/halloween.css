@@ -60,3 +60,23 @@
 .hw-pet-close-row .hw-pet-close{position:static;inset:auto;transform:none;pointer-events:auto;width:40px;height:40px;flex:0 0 40px}
 .hw-pet .hw-bubble{padding-right:14px}
 @media(max-width:700px){.hw-pet-close-row{width:198px;max-width:min(198px,calc(100vw - 20px));margin-left:-70px}}
+
+/* Compact Boo so page content stays readable. Messages open only for interactions. */
+.hw-pet{right:16px;bottom:14px;width:140px;transition:opacity .18s ease,transform .18s ease}
+.hw-ghost-button{width:126px;height:134px}
+.hw-pet-name{font-size:8px;padding:4px 8px}
+.hw-pet .hw-bubble{width:210px;max-width:min(210px,calc(100vw - 24px));margin-left:-58px;font-size:12px;padding:10px 12px}
+.hw-pet-close-row{width:210px;max-width:min(210px,calc(100vw - 24px));margin-left:-58px;padding-top:6px}
+.hw-pet-close-row .hw-pet-close{width:32px;height:32px;flex-basis:32px;font-size:21px}
+.hw-snack{left:42px;top:83px;width:45px;height:39px}
+.hw-pet.hw-scrolling{opacity:.58;transform:scale(.88);transform-origin:right bottom}
+.hw-pet.hw-scrolling .hw-bubble,.hw-pet.hw-scrolling .hw-pet-close-row{opacity:0;visibility:hidden;pointer-events:none}
+@media(max-width:700px){
+ .hw-pet{right:6px;bottom:8px;width:94px}
+ .hw-ghost-button{width:86px;height:93px}
+ .hw-pet .hw-bubble{width:180px;max-width:min(180px,calc(100vw - 16px));margin-left:-88px;font-size:11px}
+ .hw-pet-close-row{width:180px;max-width:min(180px,calc(100vw - 16px));margin-left:-88px}
+ .hw-pet-close-row .hw-pet-close{width:30px;height:30px;flex-basis:30px;font-size:20px}
+ .hw-snack{width:31px;height:27px;left:27px;top:56px}
+ .hw-pet-name{font-size:7px;letter-spacing:.35px;padding:3px 6px}
+}
