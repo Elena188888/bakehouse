@@ -112,7 +112,9 @@ export function createHalloweenUI({React,jsx,Link,products}) {
       h('path',{className:'hw-mouth',d:'M80 113 Q90 125 100 113',fill:'none',stroke:'#2a365a',strokeWidth:'3.5',strokeLinecap:'round'}))),
     current&&h('span',{className:'hw-snack',key:`${current.id}-${phase}`,'aria-hidden':'true'},h('img',{src:current.image,alt:''})),
     h('span',{className:'hw-sparkles','aria-hidden':'true'},'✦ ✨')),
-   h('span',{className:'hw-pet-name'},'CLICK TO PLAY · DRAG TO MOVE'));
+   h('span',{className:'hw-pet-name',title:'Click Boo to play. Add a treat to your cart and Boo will taste it!'},
+    h('span',null,'CLICK TO PLAY'),
+    h('span',{className:'hw-pet-treat-hint'},'ADD A TREAT · BOO WILL TASTE IT')));
  }
 
  return {HalloweenHome,HalloweenPet};

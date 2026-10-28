@@ -65,6 +65,8 @@
 .hw-pet{right:16px;bottom:14px;width:140px;transition:opacity .18s ease,transform .18s ease}
 .hw-ghost-button{width:126px;height:134px}
 .hw-pet-name{font-size:8px;padding:4px 8px}
+.hw-pet-name{display:inline-flex;flex-direction:column;gap:1px;line-height:1.25;max-width:138px}
+.hw-pet-treat-hint{font-size:7px;font-weight:700;color:#8b4525;letter-spacing:.35px}
 .hw-pet .hw-bubble{width:210px;max-width:min(210px,calc(100vw - 24px));margin-left:-58px;font-size:12px;padding:10px 12px}
 .hw-pet-close-row{width:210px;max-width:min(210px,calc(100vw - 24px));margin-left:-58px;padding-top:6px}
 .hw-pet-close-row .hw-pet-close{width:32px;height:32px;flex-basis:32px;font-size:21px}
@@ -78,5 +80,6 @@
  .hw-pet-close-row{width:180px;max-width:min(180px,calc(100vw - 16px));margin-left:-88px}
  .hw-pet-close-row .hw-pet-close{width:30px;height:30px;flex-basis:30px;font-size:20px}
  .hw-snack{width:31px;height:27px;left:27px;top:56px}
- .hw-pet-name{font-size:7px;letter-spacing:.35px;padding:3px 6px}
+ .hw-pet-name{font-size:6.5px;letter-spacing:.3px;padding:3px 5px;max-width:94px}
+ .hw-pet-treat-hint{font-size:6px;letter-spacing:.15px}
 }
