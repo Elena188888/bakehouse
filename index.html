@@ -40,9 +40,15 @@
           var id=++token;
           document.documentElement.classList.add('route-resetting');
           topNow();
-          // Render, images and font swapping can move the viewport after navigation.
-          [0,16,50,120,250,450,750,1150,1750,2300].forEach(function(t){
-            setTimeout(function(){if(id!==token)return;topNow();if(t===2300)document.documentElement.classList.remove('route-resetting')},t);
+          // Let React finish the route render, then stop controlling the viewport.
+          requestAnimationFrame(function(){
+            if(id!==token)return;
+            topNow();
+            requestAnimationFrame(function(){
+              if(id!==token)return;
+              topNow();
+              document.documentElement.classList.remove('route-resetting');
+            });
           });
         }
         // React Router's Link uses click handlers before the hashchange occurs.
