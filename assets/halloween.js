@@ -100,7 +100,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
       h('path',{className:'hw-mouth',d:'M80 113 Q90 125 100 113',fill:'none',stroke:'#2a365a',strokeWidth:'3.5',strokeLinecap:'round'}))),
     current&&h('span',{className:'hw-snack',key:`${current.id}-${phase}`,'aria-hidden':'true'},h('img',{src:current.image,alt:''})),
     h('span',{className:'hw-sparkles','aria-hidden':'true'},'✦ ✨')),
-   h('span',{className:'hw-pet-name'},'DRAG ME · BOO'),
+   h('span',{className:'hw-pet-name'},'CLICK TO PLAY · DRAG TO MOVE'),
    h('button',{type:'button',className:'hw-pet-close',onClick:()=>setPetHidden(true),title:'Close Boo','aria-label':'Close Boo the Halloween ghost'},'×'));
  }
 
