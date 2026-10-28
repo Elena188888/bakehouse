@@ -91,6 +91,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
   const style=position?{left:position.left+'px',top:position.top+'px',right:'auto',bottom:'auto'}:undefined;
   return h('aside',{ref:pet,className:`hw-pet hw-${phase}${active?' hw-active':''}${dragging?' hw-dragging':''}`,style,'aria-label':'Boo, your Halloween bakery companion'},
    h('div',{className:'hw-bubble'},h('p',{role:'status','aria-live':'polite','aria-atomic':'true'},message),h(Link,{className:'hw-pet-cta',to:'/menu',onClick:()=>setMessage('Choose your favourite, then tap Add to Cart. I’m ready!')},'Find your next treat →')),
+   h('div',{className:'hw-pet-close-row'},h('button',{type:'button',className:'hw-pet-close',onClick:()=>setPetHidden(true),title:'Close Boo','aria-label':'Close Boo the Halloween ghost'},'×')),
    h('button',{type:'button',className:'hw-ghost-button',onPointerDown:moveStart,onPointerMove:moveDrag,onPointerUp:moveEnd,onPointerCancel:moveEnd,onKeyDown:e=>{const directions={ArrowLeft:[-20,0],ArrowRight:[20,0],ArrowUp:[0,-20],ArrowDown:[0,20]};if(!directions[e.key])return;e.preventDefault();const r=pet.current.getBoundingClientRect(),[dx,dy]=directions[e.key];setPosition(clampPosition(r.left+dx,r.top+dy))},onClick:()=>{if(suppressClick.current>Date.now())return;setActive(true);if(!busy.current)setMessage('Add a pastry to your cart and I’ll have a tiny taste!')},'aria-label':'Play Bakehouse Merge to unlock coupons; drag this ghost to move it'},
     h('svg',{className:'hw-ghost',viewBox:'0 0 180 185','aria-hidden':'true',xmlns:'http://www.w3.org/2000/svg'},
      h('g',{className:'hw-ghost-body'},
@@ -100,8 +101,7 @@ export function createHalloweenUI({React,jsx,Link,products}) {
       h('path',{className:'hw-mouth',d:'M80 113 Q90 125 100 113',fill:'none',stroke:'#2a365a',strokeWidth:'3.5',strokeLinecap:'round'}))),
     current&&h('span',{className:'hw-snack',key:`${current.id}-${phase}`,'aria-hidden':'true'},h('img',{src:current.image,alt:''})),
     h('span',{className:'hw-sparkles','aria-hidden':'true'},'✦ ✨')),
-   h('span',{className:'hw-pet-name'},'CLICK TO PLAY · DRAG TO MOVE'),
-   h('button',{type:'button',className:'hw-pet-close',onClick:()=>setPetHidden(true),title:'Close Boo','aria-label':'Close Boo the Halloween ghost'},'×'));
+   h('span',{className:'hw-pet-name'},'CLICK TO PLAY · DRAG TO MOVE'));
  }
 
  return {HalloweenHome,HalloweenPet};

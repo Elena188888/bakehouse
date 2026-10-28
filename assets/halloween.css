@@ -54,3 +54,9 @@
 @media(max-width:700px){.hw-pet .hw-bubble{width:198px;max-width:min(198px,calc(100vw - 20px));margin-left:-70px}}
 
 .hw-pet:not(.hw-active):hover .hw-bubble,.hw-pet:not(.hw-active):focus-within .hw-bubble{opacity:0;visibility:hidden;transform:translateY(8px)}
+
+/* Keep the close control in its own row below the message card. */
+.hw-pet-close-row{width:240px;max-width:min(240px,calc(100vw - 24px));margin-left:-54px;padding-top:8px;display:flex;justify-content:flex-end;pointer-events:none;box-sizing:border-box}
+.hw-pet-close-row .hw-pet-close{position:static;inset:auto;transform:none;pointer-events:auto;width:40px;height:40px;flex:0 0 40px}
+.hw-pet .hw-bubble{padding-right:14px}
+@media(max-width:700px){.hw-pet-close-row{width:198px;max-width:min(198px,calc(100vw - 20px));margin-left:-70px}}
