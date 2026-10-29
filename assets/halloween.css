@@ -80,9 +80,10 @@
  .hw-pet-close-row{width:180px;max-width:min(180px,calc(100vw - 16px));margin-left:-88px}
  .hw-pet-close-row .hw-pet-close{width:30px;height:30px;flex-basis:30px;font-size:20px}
  .hw-snack{width:31px;height:27px;left:27px;top:56px}
- .hw-pet-name{width:94px;max-width:calc(100vw - 12px);box-sizing:border-box;font-size:6.5px;letter-spacing:.3px;padding:4px 6px;white-space:normal;overflow:hidden}
+ .hw-pet-name{width:104px;max-width:calc(100vw - 12px);margin-left:-5px;box-sizing:border-box;font-size:8px;line-height:1.15;letter-spacing:.2px;padding:5px 6px;gap:2px;white-space:normal;overflow:hidden;border-radius:14px}
  .hw-pet-name>span:first-child{white-space:nowrap}
- .hw-pet-treat-hint{display:block;width:100%;font-size:6px;line-height:1.15;letter-spacing:.1px;white-space:normal;text-align:center}
+ .hw-pet-treat-hint{display:block;width:100%;font-size:0;line-height:1;white-space:normal;text-align:center}
+ .hw-pet-treat-hint:after{content:'ADD TO CART · BOO REACTS';display:block;font-size:7px;line-height:1.15;letter-spacing:0;white-space:nowrap}
 }
 
 /* Keep alternating Our Story media aligned with its year copy. */
