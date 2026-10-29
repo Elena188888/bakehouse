@@ -83,3 +83,6 @@
  .hw-pet-name{font-size:6.5px;letter-spacing:.3px;padding:3px 5px;max-width:94px}
  .hw-pet-treat-hint{font-size:6px;letter-spacing:.15px}
 }
+
+/* Keep alternating Our Story media aligned with its year copy. */
+@media(min-width:1024px){.story-timeline-media,.story-timeline-copy{grid-row:1}}
