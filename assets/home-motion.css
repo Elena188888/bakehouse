@@ -1,0 +1,58 @@
+/* Quiet, bakery-inspired motion for the home page. */
+.bh-home-motion .bh-hero-item{
+  opacity:0;
+  transform:translateY(18px);
+  animation:bh-hero-rise .72s cubic-bezier(.22,.75,.26,1) var(--bh-delay,80ms) forwards;
+}
+.bh-home-motion .bh-title-line{
+  transform-origin:left center;
+  will-change:transform,letter-spacing,filter;
+  animation:bh-title-breathe 5.2s ease-in-out calc(1.05s + var(--bh-breath-delay,0s)) infinite alternate!important;
+}
+.bh-home-motion .bh-hero-motion>div:first-child img,
+.bh-home-motion .bh-hero-motion .bh-motion-image{
+  animation:bh-photo-breathe 12s ease-in-out infinite alternate;
+  transform-origin:center;
+  will-change:transform;
+}
+.bh-home-motion .bh-reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .7s ease var(--bh-section-delay,0ms),transform .8s cubic-bezier(.22,.75,.26,1) var(--bh-section-delay,0ms);
+}
+.bh-home-motion .bh-reveal.bh-visible{opacity:1;transform:translateY(0)}
+.bh-home-motion .bh-motion-card{
+  transition:transform .28s ease,box-shadow .28s ease,background-color .28s ease;
+  will-change:transform;
+}
+.bh-home-motion .bh-motion-card:hover,
+.bh-home-motion .bh-motion-card:focus-visible{
+  transform:translateY(-6px);
+  box-shadow:0 18px 36px rgba(16,57,120,.12);
+}
+.bh-home-motion .bh-motion-card img{transition:transform .6s cubic-bezier(.22,.75,.26,1)}
+.bh-home-motion .bh-motion-card:hover img,.bh-home-motion .bh-motion-card:focus-visible img{transform:scale(1.035)}
+.bh-home-motion #halloween-feature:before{animation:bh-star-drift 5s ease-in-out infinite}
+.bh-home-motion #halloween-feature .hw-photo img{animation:bh-seasonal-breathe 9s ease-in-out infinite alternate}
+.bh-home-motion #halloween-feature .hw-photo-stamp{transition:transform .3s ease,box-shadow .3s ease}
+.bh-home-motion #halloween-feature .hw-photo:hover .hw-photo-stamp{transform:translateX(-50%) rotate(0);box-shadow:0 8px 22px rgba(16,57,120,.15)}
+
+@keyframes bh-hero-rise{to{opacity:1;transform:translateY(0)}}
+@keyframes bh-title-breathe{
+  from{transform:scaleX(1);letter-spacing:-.025em;filter:brightness(1) drop-shadow(0 0 0 rgba(255,255,255,0))}
+  to{transform:scaleX(1.016);letter-spacing:-.006em;filter:brightness(1.1) drop-shadow(0 0 10px rgba(255,255,255,.14))}
+}
+@keyframes bh-photo-breathe{from{transform:scale(1)}to{transform:scale(1.025)}}
+@keyframes bh-seasonal-breathe{from{transform:scale(1)}to{transform:scale(1.018)}}
+@keyframes bh-star-drift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(7px) rotate(8deg)}}
+
+@media(max-width:700px){
+  .bh-home-motion .bh-reveal{transform:translateY(18px)}
+  .bh-home-motion .bh-motion-card:hover{transform:none;box-shadow:none}
+  .bh-home-motion .bh-title-line{animation-duration:5.8s!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .bh-home-motion .bh-hero-item,.bh-home-motion .bh-reveal{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+  .bh-home-motion .bh-title-line,.bh-home-motion .bh-motion-image,.bh-home-motion #halloween-feature:before,.bh-home-motion #halloween-feature .hw-photo img{animation:none!important}
+  .bh-home-motion .bh-motion-card,.bh-home-motion .bh-motion-card img{transition:none!important;transform:none!important}
+}
